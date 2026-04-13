@@ -1,5 +1,5 @@
 Team 7(Maddie, Lauren, Isaac): Eng Study Room and Laptop Checkout website 
-web-based database application
+- web-based database application
 
 must have following installed to run:
 1. Microsoft SQL Server
