@@ -2,8 +2,8 @@ Team 7(Maddie, Lauren, Isaac): Eng Study Room and Laptop Checkout website
 web-based database application
 
 must have following installed to run:
-Microsoft SQL Server
-Node.js(v18 or higher) - https://nodejs.org/en
+1. Microsoft SQL Server
+2. Node.js(v18 or higher) - https://nodejs.org/en
 
 RUNNING THE APPLICATION:
 1. Open and run Tables.sql(builds schema)
