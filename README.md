@@ -11,5 +11,5 @@ RUNNING THE APPLICATION:
 3. open http://localhost:3000/home.html in web browser
 
 potential errors:
-1. when running, if error: Data source name not found
-must change driver in server.js, open ODBC Data sources, go to driver tab, and change line to the '.... for SQL Server' found on device
+1. when running, if error: Data source name not found 
+- must change driver in server.js, open ODBC Data sources, go to driver tab, and change line to the '.... for SQL Server' found on device
