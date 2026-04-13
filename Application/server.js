@@ -1,6 +1,7 @@
 //communicates with our sql database in order to relay it back to our frontend, runs server for our html website
 //tools downloaded:
 //npm install express mssql
+//npm install msnodesqlv8
 const express = require('express');
 const sql = require('mssql/msnodesqlv8');
 const path = require('path');
