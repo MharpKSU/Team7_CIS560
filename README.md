@@ -12,4 +12,4 @@ RUNNING THE APPLICATION:
 
 potential errors:
 1. when running, if error: Data source name not found 
-- must change driver in server.js, open ODBC Data sources, go to driver tab, and change line to the '.... for SQL Server' found on device
+- must change driver in server.js, search and open ODBC Data sources on device, go to driver tab, and change line in server.js to '.... for SQL Server' found on device
