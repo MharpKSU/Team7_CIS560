@@ -33,8 +33,6 @@ Create TABLE Student(
     UNIQUE(Email),
     CONSTRAINT FK_Major FOREIGN KEY (MajorId) REFERENCES Major(MajorId)
 )
-
-
 CREATE TABLE RoomReservation(
     RoomReservationId INT IDENTITY(1,1) PRIMARY KEY,
     ReserveDateTime NVARCHAR(255) NOT NULL, --I think i makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
@@ -52,12 +50,10 @@ Values('Computer Science'),
       ('Computer Engineering'),
       ('Mechanical Engineering'),
       ('Chemical Engineering');
-
-
 INSERT INTO Room (RoomNumber) 
 VALUES (101);
 INSERT INTO Student (FirstName, LastName, Email, MajorId) 
-VALUES ('John', 'Fuller', 'jon@ksu.edu', 1);
+VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1);
 INSERT INTO Student (FirstName, LastName, Email, MajorId) 
 Values('Maddie', 'Harp', 'maddie@ksu.edu', 1),
       ('Isaac', 'Meisinger', 'isaac46@ksu.edu', 1),
