@@ -1,14 +1,11 @@
 DROP TABLE IF EXISTS RoomReservation; 
+DROP TABLE IF EXISTS LaptopReservation; 
 DROP TABLE IF EXISTS Student;         
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
-DROP TABLE IF EXISTS TestConnection;
+DROP TABLE IF EXISTS Laptop;
 
---test table for testing server connection
-CREATE TABLE TestConnection (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    message NVARCHAR(255) NOT NULL
-);
+
 CREATE TABLE Room(
     RoomId INT IDENTITY(1,1) PRIMARY KEY,
     RoomNumber INT NOT NULL,
@@ -16,6 +13,16 @@ CREATE TABLE Room(
     UNIQUE(RoomNumber)
 )
 
+CREATE TABLE Laptop(
+    LaptopId INT IDENTITY(1,1) PRIMARY KEY,
+    LaptopNumber INT NOT NULL,
+    LaptopMake NVARCHAR(50) NOT NULL,--Brand
+    LaptopModel NVARCHAR(50) NOT NULL,--Model
+    DateActivated DATETIME NOT NULL,
+    DateDeactivated DATETIME NULL,
+    
+    UNIQUE(LaptopNumber)
+)
 
 CREATE TABLE Major(
     MajorId INT IDENTITY(1,1) PRIMARY KEY,
@@ -33,6 +40,18 @@ Create TABLE Student(
     UNIQUE(Email),
     CONSTRAINT FK_Major FOREIGN KEY (MajorId) REFERENCES Major(MajorId)
 )
+
+CREATE TABLE LaptopReservation(
+    LaptopReservationId INT IDENTITY(1,1) PRIMARY KEY,
+    ReserveDateTime NVARCHAR(255) NOT NULL, 
+    StudentId INT NULL,
+    DropoffTime DATETIMEOFFSET NULL,
+    PickupTime DATETIMEOFFSET NULL,
+    LaptopId INT NOT NULL,
+    CONSTRAINT FK_Laptop FOREIGN KEY(LaptopId) REFERENCES Laptop(LaptopId),
+    CONSTRAINT FK_Student FOREIGN KEY(StudentId) REFERENCES Student(StudentId)
+)
+
 CREATE TABLE RoomReservation(
     RoomReservationId INT IDENTITY(1,1) PRIMARY KEY,
     ReserveDateTime NVARCHAR(255) NOT NULL, --I think i makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
@@ -42,14 +61,19 @@ CREATE TABLE RoomReservation(
     ReservationDuration NVARCHAR(255),
     UNIQUE(ReserveDateTime, RoomId),
     CONSTRAINT FK_Room FOREIGN KEY(RoomId) REFERENCES Room(RoomId),
-    CONSTRAINT FK_Student FOREIGN KEY(StudentId) REFERENCES Student(StudentId)
+    CONSTRAINT FK_Student2 FOREIGN KEY(StudentId) REFERENCES Student(StudentId)
 )
+
+INSERT INTO Laptop(LaptopNumber, LaptopMake, LaptopModel, DateActivated)
+VALUEs(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12')
+
 Insert INTO Major([Name])
 Values('Computer Science'), 
       ('Eletrical Engineering'),
       ('Computer Engineering'),
       ('Mechanical Engineering'),
       ('Chemical Engineering');
+      
 INSERT INTO Room (RoomNumber) 
 VALUES (101);
 INSERT INTO Student (FirstName, LastName, Email, MajorId) 
@@ -66,3 +90,4 @@ INSERT INTO RoomReservation (RoomPassword, ReserveDateTime, RoomId, StudentId, R
 VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
+SELECT * FROM Laptop;
