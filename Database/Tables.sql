@@ -36,7 +36,7 @@ Create TABLE Student(
     FirstName NVARCHAR(32) NOT NULL CHECK (LEN([FirstName]) >= 1),
     MajorId INT NULL,
     Email NVARCHAR(255) NOT NULL,
-
+    [Password] NVARCHAR(30) NOT NULL,
     UNIQUE(Email),
     CONSTRAINT FK_Major FOREIGN KEY (MajorId) REFERENCES Major(MajorId)
 )
@@ -76,16 +76,16 @@ Values('Computer Science'),
       
 INSERT INTO Room (RoomNumber) 
 VALUES (101);
-INSERT INTO Student (FirstName, LastName, Email, MajorId) 
-VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1);
-INSERT INTO Student (FirstName, LastName, Email, MajorId) 
-Values('Maddie', 'Harp', 'maddie@ksu.edu', 1),
-      ('Isaac', 'Meisinger', 'isaac46@ksu.edu', 1),
-      ('Lauren', 'Palyash', 'lauren@ksu.edu', 1),
-      ('Marshall', 'Mosier', 'marshall@ksu.edu', 5),
-      ('Tobin', 'Simpkins', 'tobin@ksu.edu', 4),
-      ('Michael', 'Valasques', 'michael@ksu.edu', 2),
-      ('Pa', 'Trice', 'pa@ksu.edu', 3);
+INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
+VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1, 'JOHN');
+INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
+Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
+      ('Isaac', 'Meisinger', 'isaac46@ksu.edu', 1, 'ISAAC1234'),
+      ('Lauren', 'Palyash', 'lauren@ksu.edu', 1, 'PASSPASS'),
+      ('Marshall', 'Mosier', 'marshall@ksu.edu', 5, 'CHUDCHUD'),
+      ('Tobin', 'Simpkins', 'tobin@ksu.edu', 4, 'BOBERBOBER'),
+      ('Michael', 'Valasques', 'michael@ksu.edu', 2, 'BIGMIKE12'),
+      ('Pa', 'Trice', 'pa@ksu.edu', 3, 'HELP');
 INSERT INTO RoomReservation (RoomPassword, ReserveDateTime, RoomId, StudentId, ReservationDuration)
 VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
 SELECT * FROM RoomReservation;
