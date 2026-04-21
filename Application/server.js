@@ -7,6 +7,8 @@ const sql = require('mssql/msnodesqlv8');
 const path = require('path');
 const app = express();
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+
 const dbConfig ={
     server: '(localdb)\\MSSQLLocalDb',
     database: 'master',
@@ -18,17 +20,28 @@ const dbConfig ={
     }
 };
 
-app.get('/api/testconnection', async (req, res) => {
+app.post('/api/login', async (req, res) => {
+    const email = req.body.email;
+    const pass = req.body.pass;
+    console.log("here");
     try{
         await sql.connect(dbConfig);
-        const result = await sql.query('SELECT * FROM TestConnection');
-        res.json({dbMessage: result.recordset[0].message});
+        const request = new sql.Request();
+        request.input('email', sql.NVarChar, email);
+        request.input('pass', sql.NVarChar, pass);
+        const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass');
+        if (result.recordset.length > 0) {
+            console.log('right');
+            res.json({ success: true, dbMessage:"Logged In" });
+        } else {
+            res.json({ success: false, dbMessage:"Not found" });
+        }
     }
     catch(e){
         //if ConnectionError: failed to connect to localhost:1433 happens
         //enable TCP/IP protocol for MSSQLSERVER
         console.error("ERROR:", e);
-        res.status(500).json({dbMessage: "FAILED TO CONNECT"})
+        res.status(500).json({dbMessage: "SERVER ERROR"})
     }
 });
 

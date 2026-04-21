@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS Student;
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
 DROP TABLE IF EXISTS Laptop;
+GO
 
 
 CREATE TABLE Room(
@@ -63,6 +64,7 @@ CREATE TABLE RoomReservation(
     CONSTRAINT FK_Room FOREIGN KEY(RoomId) REFERENCES Room(RoomId),
     CONSTRAINT FK_Student2 FOREIGN KEY(StudentId) REFERENCES Student(StudentId)
 )
+GO
 
 INSERT INTO Laptop(LaptopNumber, LaptopMake, LaptopModel, DateActivated)
 VALUEs(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12')
@@ -91,3 +93,4 @@ VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
 SELECT * FROM Laptop;
+GO
