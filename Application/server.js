@@ -33,5 +33,5 @@ app.get('/api/testconnection', async (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('server running open http://localhost:3000 in browser');
+    console.log('server running open http://localhost:3000/home.html in browser');
 });
