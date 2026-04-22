@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS LaptopReservation; 
-DROP TABLE IF EXISTS Student;         
+DROP TABLE IF EXISTS Student;
+DROP TABLE IF EXISTS RoomAvailability;         
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
 DROP TABLE IF EXISTS Laptop;
@@ -10,8 +11,18 @@ GO
 CREATE TABLE Room(
     RoomId INT IDENTITY(1,1) PRIMARY KEY,
     RoomNumber INT NOT NULL,
-    --OpenTimes NVARCHAR(255) NOT NULL, this is bad and a violation
+
     UNIQUE(RoomNumber)
+)
+
+CREATE TABLE RoomAvailability(
+    RoomAvailabilityId INT IDENTITY(1,1) PRIMARY KEY,
+    RoomId INT NOT NULL,
+    DayOfWeek NVARCHAR(12) NOT NULL,
+    OpenTime TIME NOT NULL,
+    ClosedTime TIME NOT NULL
+
+    CONSTRAINT FK_Room2 FOREIGN KEY(RoomId) REFERENCES Room(RoomId)
 )
 
 CREATE TABLE Laptop(
@@ -67,7 +78,7 @@ CREATE TABLE RoomReservation(
 GO
 
 INSERT INTO Laptop(LaptopNumber, LaptopMake, LaptopModel, DateActivated, DateDeactivated)
-VALUEs(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12', NULL),
+VALUES(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12', NULL),
       (2, 'Dell', 'XPS 13', '2026-4-21 7:32:32:0', NULL),
       (3, 'Dell', 'Latitude 2120', '2011-3-11 8:10:48:123', '2018-1-1 1:00:00:00'),
       (4, 'ThinkPad', 'X1', '2025-11-14 18:23:45:66', NULL),
@@ -110,9 +121,18 @@ INSERT INTO RoomReservation (RoomPassword, ReserveDateTime, RoomId, StudentId, R
 VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
 INSERT INTO LaptopReservation(ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
 VALUES ('BLEH BLEH', 4, '2026-4-21 10:20:00:00', '2026-4-21 12:20:00:00', 1)
+
+INSERT INTO RoomAvailability(RoomId, DayOfWeek, OpenTime, ClosedTime)
+VALUES(1, 'Monday', '8:00:00', '20:00:00'),
+      (1, 'Tuesday', '8:00:00', '20:00:00'),
+      (1, 'Wednesday', '8:00:00', '20:00:00'),
+      (1, 'Thursday', '8:00:00', '20:00:00'),
+      (1, 'Friday', '8:00:00', '17:00:00');
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
 SELECT * FROM Laptop;
 SELECT * FROM ROOM;
 SELECT * FROM LaptopReservation;
+SELECT * FROM RoomAvailability;
+
 GO
