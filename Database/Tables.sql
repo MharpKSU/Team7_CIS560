@@ -62,7 +62,7 @@ CREATE TABLE RoomReservation(
     RoomId INT NOT NULL,
     StudentId INT NOT NULL,
     ReservationDuration NVARCHAR(255),
-    UNIQUE(ReserveDateTime, RoomId),
+    UNIQUE(StartTime, RoomId),
     CONSTRAINT FK_Room FOREIGN KEY(RoomId) REFERENCES Room(RoomId),
     CONSTRAINT FK_Student2 FOREIGN KEY(StudentId) REFERENCES Student(StudentId)
 )
