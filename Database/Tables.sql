@@ -69,14 +69,22 @@ GO
 INSERT INTO Laptop(LaptopNumber, LaptopMake, LaptopModel, DateActivated, DateDeactivated)
 VALUEs(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12', NULL),
       (2, 'Dell', 'XPS 13', '2026-4-21 7:32:32:0', NULL),
-      (3, 'Dell', 'Latitude 2120', '2011-3-11 8:10:48:123', '2018-1-1 1:00:00:00');
+      (3, 'Dell', 'Latitude 2120', '2011-3-11 8:10:48:123', '2018-1-1 1:00:00:00'),
+      (4, 'ThinkPad', 'X1', '2025-11-14 18:23:45:66', NULL),
+      (5, 'HP', 'OmniBook', '2023-6-17 15:23:00:00', NULL),
+      (6, 'HP', 'Spectre', '2022-8-30 13:00:00:76', '2026-4-21 20:03:00:00');
 
 Insert INTO Major([Name])
 Values('Computer Science'), 
       ('Eletrical Engineering'),
       ('Computer Engineering'),
       ('Mechanical Engineering'),
-      ('Chemical Engineering');
+      ('Chemical Engineering'),
+      ('Industrial Engineering'),
+      ('Civil Engineering'),
+      ('Construction Science'),
+      ('Nuclear Engineering'),
+      ('Boimedical Engineering');
       
 INSERT INTO Room (RoomNumber) 
 VALUES (101),
@@ -101,9 +109,10 @@ Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
 INSERT INTO RoomReservation (RoomPassword, ReserveDateTime, RoomId, StudentId, ReservationDuration)
 VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
 INSERT INTO LaptopReservation(ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
-VALUES ()
+VALUES ('BLEH BLEH', 4, '2026-4-21 10:20:00:00', '2026-4-21 12:20:00:00', 1)
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
 SELECT * FROM Laptop;
 SELECT * FROM ROOM;
+SELECT * FROM LaptopReservation;
 GO
