@@ -1,7 +1,7 @@
 <!--home page of our website, for now a test button is added to test if it connects to our sql database-->
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="checkoutStyle.css">
+    <link rel="stylesheet" href="roomStyle.css">
     <title>KStateReservations</title>
     <header class="header">
         <div class="leftHeader">
@@ -15,17 +15,23 @@
     <body>
         <div class="container">
         <img  class="engPhoto" src="websitePics/inside-eng-budiling.jpg" height="150px">
-        <h1 class="engPhotoText">Room and Laptop Checkout</h1>
-
-        <h2 class="resText">Reservations</h2>
+        <h1 class="engPhotoText">Room Checkout</h1>
+        <header class="resOptions">
+            <h2 class="resText">Reservations -</h2>
+        <select class="select" id="reservationType">
+            <option value="Rooms" selected>Rooms</option>
+            <option value="Laptops">Laptops</option>
+        </select>
+        </header>
+        
         <div class="date-selector">
-            <label for="reservationDate">Select Date:</label>
+            <label class="highlightBlocks" for="reservationDate">Select Date:</label>
             <input type="date" id="reservationDate">
         </div>
         <div class="calendar" id="calendar-container"></div>
         <h3 class="highlightBlocks" id="selection-output" >Highlight blocks to select a time!</h3>
         </div>
     
-        <script src="calendar.js"></script>
+        <script src="roomController.js"></script>
     </body>
 </html>

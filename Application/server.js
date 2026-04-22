@@ -49,7 +49,7 @@ app.listen(3000, () => {
     console.log('server running open http://localhost:3000/home.html in browser');
 });
 
-app.get('/api/calendar', async (req, res) => {
+app.get('/api/roomCal', async (req, res) => {
     const requestedDate = req.query.date; 
     const dateObj = new Date(requestedDate);
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -67,12 +67,13 @@ app.get('/api/calendar', async (req, res) => {
         const roomResult = await request.query(roomQuery)
         let rooms = roomResult.recordset;
 
-        request.input('searchDate', sql.NVarChar, `%${requestedDate}%`);
+        request.input('searchDate', sql.Date, requestedDate); 
         const resQuery = `
-            SELECT RoomId, ReserveDateTime 
+            SELECT RoomId, StartTime, EndTime 
             FROM RoomReservation 
-            WHERE ReserveDateTime LIKE @searchDate
+            WHERE CAST(StartTime AS DATE) = @searchDate
         `;
+        
         const resResult = await request.query(resQuery);
         const reservations = resResult.recordset;
         rooms.forEach(room => {
@@ -85,15 +86,42 @@ app.get('/api/calendar', async (req, res) => {
     }
 });
 
-app.get('/api/times', async (req, res) => {
-    try{
+app.get('/api/laptopCal', async (req, res) => {
+    const requestedDate = req.query.date; 
+
+    try {
         await sql.connect(dbConfig);
         const request = new sql.Request();
-        const result = await request.query('SELECT Room FROM ROOM');
-        console.log("hit cal server");
-        res.json({rooms: result.recordset});
-    }
-    catch(e){
-        console.log(e);
+        
+        // 1. Get all laptops that aren't deactivated yet
+        const laptopQuery = `
+            SELECT LaptopId, LaptopNumber, LaptopMake, LaptopModel 
+            FROM Laptop
+            WHERE DateDeactivated IS NULL OR DateDeactivated > GETDATE()
+        `;
+        const laptopResult = await request.query(laptopQuery);
+        let laptops = laptopResult.recordset;
+
+        // 2. Get laptop reservations for this specific date
+        request.input('searchDate', sql.NVarChar, `%${requestedDate}%`);
+        const resQuery = `
+            SELECT LaptopId, ReserveDateTime 
+            FROM LaptopReservation 
+            WHERE ReserveDateTime LIKE @searchDate
+        `;
+        const resResult = await request.query(resQuery);
+        const reservations = resResult.recordset;
+
+        // 3. Bundle the reservations into the specific laptops
+        laptops.forEach(laptop => {
+            laptop.bookedSlots = reservations.filter(res => res.LaptopId === laptop.LaptopId);
+        });
+
+        // Send it to the frontend!
+        res.json({ success: true, laptops: laptops });
+        
+    } catch(e) {
+        console.error("ERROR:", e);
+        res.status(500).json({ success: false, dbMessage: "SERVER ERROR" });
     }
 });

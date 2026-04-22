@@ -1,7 +1,7 @@
 let times = [];
 let bookedSlots = [];
-
 const dateInput = document.getElementById('reservationDate');
+const typeDropdown = document.getElementById('reservationType');
 
 const today = new Date();
 const todayString = today.toISOString().split('T')[0];
@@ -54,7 +54,7 @@ async function buildCalendar(selectedDate) {
     if (!selectedDate) return;
     console.log("build cal before try");
     try{
-        const database = await fetch(`/api/calendar?date=${selectedDate}`);
+        const database = await fetch(`/api/roomCal?date=${selectedDate}`);
         const data = await database.json();
         if (!data.rooms || data.rooms.length === 0) {
             container.innerHTML = "<h3>No rooms available on this date.</h3>";
@@ -94,8 +94,11 @@ async function buildCalendar(selectedDate) {
                 let isReserved = false;
                 if (!isClosed && roomObj.bookedSlots) {
                     isReserved = roomObj.bookedSlots.some(slot => {
-                        let resBounds = parseReservationString(slot.ReserveDateTime);
-                        return currentSlotMins >= resBounds.start && currentSlotMins < resBounds.end;
+                        let start = new Date(slot.StartTime);
+                        let end = new Date(slot.EndTime);
+                        let startMins = (start.getUTCHours() * 60) + start.getUTCMinutes();
+                        let endMins = (end.getUTCHours() * 60) + end.getUTCMinutes();
+                        return currentSlotMins >= startMins && currentSlotMins < endMins;
                     });
                 }
                 if (isClosed || isReserved) {
@@ -173,3 +176,9 @@ function attachClickListeners() {
 }
 
 buildCalendar(todayString);
+typeDropdown.addEventListener('change', function() {
+    const selectedChoice = this.value; 
+    if (selectedChoice === 'Laptops') {
+        window.location.href = '/laptopPage.html'; 
+    } 
+});
