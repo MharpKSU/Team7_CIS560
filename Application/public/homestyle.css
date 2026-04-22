@@ -1,0 +1,100 @@
+body {
+  /* stripes for background! */
+  background: repeating-linear-gradient(
+    45deg,
+    #f4f4f4,
+    #f4f4f4 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  );
+  margin: 0; 
+  font-family: Arial, sans-serif;
+}
+
+.container{
+  background-color: white;
+  /*this adjusts the size of the body panel, adjusts how much of the stripes you can see for the background bascailly*/
+  max-width: 96%; 
+  min-height: 150vh; 
+  margin: 0 auto; 
+  margin-top: 0;
+  
+  /*adds a shadow between the stripes and body of website*/
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/*this section styles the header before the photo of the eng building*/
+.header {
+  display: flex; 
+  justify-content: space-between;
+  align-items: center; 
+  height: 60px;
+  background-color: white; 
+  color: #512888; 
+  padding-left: 10px;
+}
+.leftHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.leftHeader h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #512888;
+  margin: 0;
+}
+/*line in header!*/
+.dividerLine {
+  width: 2px;
+  height: 40px;
+  background-color: #512888;
+}
+
+/*this adjusts the photo of the eng building at top of website*/
+.engPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.engPhotoText {
+  display: flex; 
+  text-align: center;
+  align-items: center; 
+  justify-content: center;
+  margin-top: 0;
+  height: 80px;
+  background-color: #512888; 
+  color: white; 
+}
+
+/*this portion styles the main body under the title and eng building photo*/
+.resText{
+  font-size: 30px;
+  font-weight: bold;
+  color: #512888;
+  padding-left: 10px;
+  padding-top: 10px;
+  margin: 0px;
+  margin-top: 0;
+}
+.pleaseLogin{
+  font-size: 15px;
+  padding-left: 20px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  margin: 0px;
+}
+/*adjusts the style of the login screen*/
+.inputBox{
+  padding-left: 25px;
+  padding-top: 5px;
+  padding-bottom: 10px;
+  margin: 0px;
+}
+.loginBtn{
+  padding-left: 25px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
