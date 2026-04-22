@@ -11,6 +11,8 @@ document.getElementById('loginBtn').addEventListener('click', async function(){
         if(data.success){
             loginOutput.style.color = "green";
             loginOutput.innerText = data.dbMessage;
+            console.log("SECOND PAGE NOW");
+            setTimeout(() => {window.location.href = '/checkoutPage.html'; }, 1000);
         }
         else {
             loginOutput.style.color = "red";

@@ -32,9 +32,9 @@ app.post('/api/login', async (req, res) => {
         const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass');
         if (result.recordset.length > 0) {
             console.log('right');
-            res.json({ success: true, dbMessage:"Logged In" });
+            res.json({ success: true, dbMessage:"Logging In..." });
         } else {
-            res.json({ success: false, dbMessage:"Not found" });
+            res.json({ success: false, dbMessage:"Not Found - Try again or contact support for help." });
         }
     }
     catch(e){
