@@ -18,8 +18,12 @@
         <h1 class="engPhotoText">Room and Laptop Checkout</h1>
 
         <h2 class="resText">Reservations</h2>
-        <h3 class="highlightBlocks" id="selection-output" >Highlight blocks to select a time!</h3>
+        <div class="date-selector">
+            <label for="reservationDate">Select Date:</label>
+            <input type="date" id="reservationDate">
+        </div>
         <div class="calendar" id="calendar-container"></div>
+        <h3 class="highlightBlocks" id="selection-output" >Highlight blocks to select a time!</h3>
         </div>
     
         <script src="calendar.js"></script>
