@@ -20,3 +20,5 @@ node_modules/
 ._*
 Thumbs.db
 ehthumbs.db
+
+.vs/

@@ -55,7 +55,9 @@ CREATE TABLE LaptopReservation(
 
 CREATE TABLE RoomReservation(
     RoomReservationId INT IDENTITY(1,1) PRIMARY KEY,
-    ReserveDateTime NVARCHAR(255) NOT NULL, --I think it makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
+    --ReserveDateTime NVARCHAR(255) NOT NULL, --I think it makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
+    StartTime DATETIME NOT NULL,
+    EndTime DATETIME NOT NULL,
     RoomPassword NVARCHAR(30) NOT NULL,
     RoomId INT NOT NULL,
     StudentId INT NOT NULL,
@@ -106,8 +108,9 @@ Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
       ('Tobin', 'Simpkins', 'tobin@ksu.edu', 4, 'BOBERBOBER'),
       ('Michael', 'Valasques', 'michael@ksu.edu', 2, 'BIGMIKE12'),
       ('Pa', 'Trice', 'pa@ksu.edu', 3, 'HELP');
-INSERT INTO RoomReservation (RoomPassword, ReserveDateTime, RoomId, StudentId, ReservationDuration)
-VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
+INSERT INTO RoomReservation (RoomPassword, StartTime, EndTime, RoomId, StudentId, ReservationDuration)
+--VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
+VALUES ('Patrice', '2015-2-2 10:20:20', '2015-2-2 12:20:20', 1, 1, '2 Hours')
 INSERT INTO LaptopReservation(ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
 VALUES ('BLEH BLEH', 4, '2026-4-21 10:20:00:00', '2026-4-21 12:20:00:00', 1)
 SELECT * FROM RoomReservation;
