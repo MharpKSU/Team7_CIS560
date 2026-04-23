@@ -1,12 +1,12 @@
-DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS LaptopReservation; 
-DROP TABLE IF EXISTS Student;
-DROP TABLE IF EXISTS RoomAvailability;         
+DROP TABLE IF EXISTS RoomReservation; 
+DROP TABLE IF EXISTS RoomAvailability; 
+
+DROP TABLE IF EXISTS Student;        
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
 DROP TABLE IF EXISTS Laptop;
 GO
-
 
 CREATE TABLE Room(
     RoomId INT IDENTITY(1,1) PRIMARY KEY,
