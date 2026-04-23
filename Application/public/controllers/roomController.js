@@ -179,6 +179,6 @@ buildCalendar(todayString);
 typeDropdown.addEventListener('change', function() {
     const selectedChoice = this.value; 
     if (selectedChoice === 'Laptops') {
-        window.location.href = '/laptopPage.html'; 
+        window.location.href = '/websites/laptopPage.html'; 
     } 
 });

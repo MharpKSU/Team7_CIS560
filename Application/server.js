@@ -46,7 +46,7 @@ app.post('/api/login', async (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('server running open http://localhost:3000/home.html in browser');
+    console.log('server running open http://localhost:3000/websites/home.html in browser');
 });
 
 app.get('/api/roomCal', async (req, res) => {
@@ -73,7 +73,7 @@ app.get('/api/roomCal', async (req, res) => {
             FROM RoomReservation 
             WHERE CAST(StartTime AS DATE) = @searchDate
         `;
-        
+
         const resResult = await request.query(resQuery);
         const reservations = resResult.recordset;
         rooms.forEach(room => {
