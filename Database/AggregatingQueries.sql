@@ -26,6 +26,43 @@ ORDER BY PopularityRank;
 --Peak checkout times: This analyzes the peak checkout times for laptops and study rooms grouped by hour 
 --of day and day of week. This can help IT and staff know when they have the heaviest load and for example, 
 --when the help/checkout desk needs more staff. 
+-- Parameters
+-- Parameters
+DECLARE @StartDate DATETIME = '2025-01-01';
+DECLARE @EndDate   DATETIME = '2025-12-31';
+
+WITH CombinedReservations AS (
+    --room
+    SELECT StartTime AS ReservationStart, EndTime AS ReservationEnd
+    FROM RoomReservation
+    WHERE StartTime BETWEEN @StartDate AND @EndDate
+
+    UNION
+    --laptop
+    SELECT PickupTime AS ReservationStart, DropoffTime AS ReservationEnd
+    FROM LaptopReservation
+    WHERE PickupTime BETWEEN @StartDate AND @EndDate
+),
+TimeData AS (
+    SELECT DATENAME(WEEKDAY, ReservationStart) AS DayOfWeek,
+        DATEPART(HOUR, ReservationStart) AS HourOfDay,
+        COUNT(*) AS TotalReservations,
+        SUM(DATEDIFF(MINUTE, ReservationStart, ReservationEnd)) AS TotalDuration
+    FROM CombinedReservations
+    GROUP BY DATENAME(WEEKDAY, ReservationStart), DATEPART(HOUR, ReservationStart)
+),
+RankedData AS (
+    SELECT *,
+        RANK() OVER (
+            PARTITION BY DayOfWeek
+            ORDER BY TotalReservations DESC
+        ) AS PeakTimeRank
+    FROM TimeData
+)
+SELECT DayOfWeek, HourOfDay, TotalReservations, TotalDuration, PeakTimeRank
+FROM RankedData
+ORDER BY DayOfWeek, PeakTimeRank;
+
 
 --Laptop maintenance report: This will show a maintenance report/history for the laptops. 
 --The query will group the laptops by make and model, calculate the total times it's been checked out, 
@@ -52,3 +89,34 @@ ORDER BY TotalTimesCheckedOut DESC, TotalDurationOfCheckOuts DESC;
 --Frequent user tracker: This query keeps track of the students that checkout rooms and laptops the
 --most within a certain month & year. This groups the data by student, major, total number of room 
 --and laptop reservations, and total time of reservations then ranking the students based on the total time.
+-- Parameters
+DECLARE @TargetYear INT = 2026;
+DECLARE @TargetMonth INT = 4;
+DECLARE @MinReservationTime INT = 0; -- mins
+
+WITH RoomTotals AS (
+    SELECT
+        StudentId, COUNT(*) AS TotalRoomsReserved, SUM(DATEDIFF(MINUTE, StartTime, EndTime)) AS RoomMinutes
+    FROM RoomReservation
+    WHERE YEAR(StartTime) = @TargetYear AND MONTH(StartTime) = @TargetMonth
+    GROUP BY StudentId
+),
+LaptopTotals AS (
+    SELECT StudentId, COUNT(*) AS TotalLaptopsReserved, SUM(DATEDIFF(MINUTE, PickupTime, DropoffTime)) AS LaptopMinutes
+    FROM LaptopReservation
+    WHERE YEAR(PickupTime) = @TargetYear AND MONTH(PickupTime) = @TargetMonth
+    GROUP BY StudentId
+)
+SELECT @TargetYear AS [Year], @TargetMonth AS [Month], s.StudentId,
+    s.FirstName + ' ' + s.LastName AS StudentName,
+    m.Name AS Major, 
+    ISNULL(r.TotalRoomsReserved, 0) AS TotalRoomsReserved,
+    ISNULL(l.TotalLaptopsReserved, 0) AS TotalLaptopsReserved,
+    ISNULL(r.RoomMinutes, 0) + ISNULL(l.LaptopMinutes, 0) AS TotalReservationTime,
+    RANK() OVER (ORDER BY ISNULL(r.RoomMinutes, 0) + ISNULL(l.LaptopMinutes, 0) DESC) AS StudentRank
+FROM Student s
+    LEFT JOIN Major m ON s.MajorId = m.MajorId
+    LEFT JOIN RoomTotals r ON s.StudentId = r.StudentId
+    LEFT JOIN LaptopTotals l ON s.StudentId = l.StudentId
+WHERE ISNULL(r.RoomMinutes, 0) + ISNULL(l.LaptopMinutes, 0) >= @MinReservationTime
+ORDER BY StudentRank;
