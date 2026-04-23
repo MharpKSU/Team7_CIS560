@@ -80,6 +80,19 @@ body {
   margin-top: 0;
 
 }
+.select{
+  margin-top: 10px;
+  font-size: 25px;
+  color:#512888;
+  font-weight: bold;
+}
+.resOptions{
+  display: flex; 
+  gap: 15px;
+  align-items: center; 
+  height: 60px;
+  padding-left: 10px;
+}
 
 .calendar{
     width: 95%;         
@@ -92,11 +105,10 @@ body {
 .highlightBlocks{
   font-size: 15px;
   padding-left: 20px;
-  padding-top: 5px;
+  padding-top: 20px;
   padding-bottom: 10px;
-  margin: 0px;
+  margin-top: 0px;
 }
-
 
 table {
     border-collapse: collapse;

@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS LaptopReservation; 
-DROP TABLE IF EXISTS Student;         
+DROP TABLE IF EXISTS Student;
+DROP TABLE IF EXISTS RoomAvailability;         
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
 DROP TABLE IF EXISTS Laptop;
@@ -10,9 +11,20 @@ GO
 CREATE TABLE Room(
     RoomId INT IDENTITY(1,1) PRIMARY KEY,
     RoomNumber INT NOT NULL,
-    --OpenTimes NVARCHAR(255) NOT NULL, this is bad and a violation
+
     UNIQUE(RoomNumber)
 )
+
+CREATE TABLE RoomAvailability(
+    RoomAvailabilityId INT IDENTITY(1,1) PRIMARY KEY,
+    RoomId INT NOT NULL,
+    DayOfWeek NVARCHAR(12) NOT NULL,
+    OpenTime TIME NOT NULL,
+    ClosedTime TIME NOT NULL
+
+    CONSTRAINT FK_Room2 FOREIGN KEY(RoomId) REFERENCES Room(RoomId)
+)
+GO
 
 CREATE TABLE Laptop(
     LaptopId INT IDENTITY(1,1) PRIMARY KEY,
@@ -55,7 +67,7 @@ CREATE TABLE LaptopReservation(
 
 CREATE TABLE RoomReservation(
     RoomReservationId INT IDENTITY(1,1) PRIMARY KEY,
-    --ReserveDateTime NVARCHAR(255) NOT NULL, --I think it makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
+   -- ReserveDateTime NVARCHAR(255) NOT NULL, --I think it makes more sense to do it lik this instead of DateTime cause we can do '2015-2-2 10:20:20 To 2015-2-2 12:20:20'
     StartTime DATETIME NOT NULL,
     EndTime DATETIME NOT NULL,
     RoomPassword NVARCHAR(30) NOT NULL,
@@ -69,7 +81,7 @@ CREATE TABLE RoomReservation(
 GO
 
 INSERT INTO Laptop(LaptopNumber, LaptopMake, LaptopModel, DateActivated, DateDeactivated)
-VALUEs(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12', NULL),
+VALUES(1, 'Dell', 'Precision 7510', '2020-05-08 12:35:29.12', NULL),
       (2, 'Dell', 'XPS 13', '2026-4-21 7:32:32:0', NULL),
       (3, 'Dell', 'Latitude 2120', '2011-3-11 8:10:48:123', '2018-1-1 1:00:00:00'),
       (4, 'ThinkPad', 'X1', '2025-11-14 18:23:45:66', NULL),
@@ -109,13 +121,62 @@ Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
       ('Michael', 'Valasques', 'michael@ksu.edu', 2, 'BIGMIKE12'),
       ('Pa', 'Trice', 'pa@ksu.edu', 3, 'HELP');
 INSERT INTO RoomReservation (RoomPassword, StartTime, EndTime, RoomId, StudentId, ReservationDuration)
---VALUES ('Patrice', '2015-2-2 10:20:20 To 2015-2-2 12:20:20', 1, 1, '2 Hours')
-VALUES ('Patrice', '2015-2-2 10:20:20', '2015-2-2 12:20:20', 1, 1, '2 Hours')
+VALUES ('Patrice', '2026-04-24 10:00:00', '2026-04-24 12:00:00', 1, 1, '2 Hours'),
+('TestPass', '2026-04-22 13:00:00', '2026-04-22 15:00:00', 1, 2, '2 Hours');
 INSERT INTO LaptopReservation(ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
-VALUES ('BLEH BLEH', 4, '2026-4-21 10:20:00:00', '2026-4-21 12:20:00:00', 1)
+VALUES ('BLEH BLEH', 4, '2026-4-24 10:20:00:00', '2026-4-24 12:20:00:00', 1)
+
+INSERT INTO RoomAvailability(RoomId, DayOfWeek, OpenTime, ClosedTime)
+VALUES(1, 'Monday', '8:00:00', '20:00:00'),
+      (1, 'Tuesday', '8:00:00', '20:00:00'),
+      (1, 'Wednesday', '8:00:00', '20:00:00'),
+      (1, 'Thursday', '8:00:00', '20:00:00'),
+      (1, 'Friday', '8:00:00', '17:00:00'),
+      (2, 'Monday', '8:00:00', '20:00:00'),
+      (2, 'Tuesday', '8:00:00', '20:00:00'),
+      (2, 'Wednesday', '8:00:00', '20:00:00'),
+      (2, 'Thursday', '8:00:00', '20:00:00'),
+      (2, 'Friday', '8:00:00', '17:00:00'),
+      (3, 'Monday', '8:00:00', '20:00:00'),
+      (3, 'Tuesday', '8:00:00', '20:00:00'),
+      (3, 'Wednesday', '8:00:00', '20:00:00'),
+      (3, 'Thursday', '8:00:00', '20:00:00'),
+      (3, 'Friday', '8:00:00', '17:00:00'),
+      (4, 'Monday', '8:00:00', '20:00:00'),
+      (4, 'Tuesday', '8:00:00', '20:00:00'),
+      (4, 'Wednesday', '8:00:00', '20:00:00'),
+      (4, 'Thursday', '8:00:00', '20:00:00'),
+      (4, 'Friday', '8:00:00', '17:00:00'),
+      (5, 'Monday', '8:00:00', '20:00:00'),
+      (5, 'Tuesday', '8:00:00', '20:00:00'),
+      (5, 'Wednesday', '8:00:00', '20:00:00'),
+      (5, 'Thursday', '8:00:00', '20:00:00'),
+      (5, 'Friday', '9:00:00', '19:00:00'),
+      (6, 'Monday', '8:00:00', '20:00:00'),
+      (6, 'Tuesday', '8:00:00', '20:00:00'),
+      (6, 'Wednesday', '8:00:00', '20:00:00'),
+      (6, 'Thursday', '8:00:00', '20:00:00'),
+      (6, 'Friday', '8:00:00', '17:00:00'),
+      (7, 'Monday', '8:00:00', '20:00:00'),
+      (7, 'Tuesday', '8:00:00', '20:00:00'),
+      (7, 'Wednesday', '8:00:00', '20:00:00'),
+      (7, 'Thursday', '8:00:00', '20:00:00'),
+      (7, 'Friday', '8:00:00', '17:00:00'),
+      (8, 'Monday', '8:00:00', '20:00:00'),
+      (8, 'Tuesday', '8:00:00', '20:00:00'),
+      (8, 'Wednesday', '8:00:00', '20:00:00'),
+      (8, 'Thursday', '8:00:00', '20:00:00'),
+      (8, 'Friday', '8:00:00', '17:00:00'),
+      (9, 'Monday', '8:00:00', '20:00:00'),
+      (9, 'Tuesday', '8:00:00', '20:00:00'),
+      (9, 'Wednesday', '8:00:00', '20:00:00'),
+      (9, 'Thursday', '8:00:00', '20:00:00'),
+      (9, 'Friday', '8:00:00', '12:00:00');
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
 SELECT * FROM Laptop;
 SELECT * FROM ROOM;
 SELECT * FROM LaptopReservation;
+SELECT * FROM RoomAvailability;
+
 GO
