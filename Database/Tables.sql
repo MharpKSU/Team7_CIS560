@@ -1,12 +1,16 @@
+DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS LaptopReservation; 
 DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS RoomAvailability; 
 
-DROP TABLE IF EXISTS Student;        
+DROP TABLE IF EXISTS Student;  
+GO
+
 DROP TABLE IF EXISTS Room;            
 DROP TABLE IF EXISTS Major;           
 DROP TABLE IF EXISTS Laptop;
 GO
+
 
 CREATE TABLE Room(
     RoomId INT IDENTITY(1,1) PRIMARY KEY,
@@ -24,7 +28,7 @@ CREATE TABLE RoomAvailability(
 
     CONSTRAINT FK_Room2 FOREIGN KEY(RoomId) REFERENCES Room(RoomId)
 )
-GO
+GO 
 
 CREATE TABLE Laptop(
     LaptopId INT IDENTITY(1,1) PRIMARY KEY,
@@ -119,7 +123,38 @@ Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
       ('Marshall', 'Mosier', 'marshall@ksu.edu', 5, 'CHUDCHUD'),
       ('Tobin', 'Simpkins', 'tobin@ksu.edu', 4, 'BOBERBOBER'),
       ('Michael', 'Valasques', 'michael@ksu.edu', 2, 'BIGMIKE12'),
-      ('Pa', 'Trice', 'pa@ksu.edu', 3, 'HELP');
+      --AI
+      ('Pa', 'Trice', 'pa@ksu.edu', 3, 'HELP'),('Ethan', 'Ramirez', 'ethanr@ksu.edu', 1, 'ETHAN99!'),
+      ('Sophia', 'Chen', 'schen@ksu.edu', 3, 'SOPHIAPASS'),
+      ('Liam', 'Oconnor', 'liamo@ksu.edu', 2, 'IRISH123'),
+      ('Olivia', 'Patel', 'olivap@ksu.edu', 9, 'BIOMED01'),
+      ('Noah', 'Brooks', 'nbrooks@ksu.edu', 4, 'MECH44'),
+      ('Ava', 'Jenkins', 'ajenkins@ksu.edu', 5, 'CHEM_LIFE'),
+      ('Mason', 'Gupta', 'mgupta@ksu.edu', 1, 'CODING7'),
+      ('Isabella', 'Rossi', 'irossi@ksu.edu', 7, 'CIVIL88'),
+      ('William', 'Zhao', 'wzhao@ksu.edu', 3, 'COMP_ENG'),
+      ('Mia', 'Sullivan', 'msullivan@ksu.edu', 8, 'CONSTRUCT'),
+      ('James', 'Fisher', 'jfisher@ksu.edu', 6, 'INDUS22'),
+      ('Charlotte', 'Kim', 'ckim@ksu.edu', 1, 'KIM1234'),
+      ('Benjamin', 'Hayes', 'bhayes@ksu.edu', 4, 'WILD_CAT'),
+      ('Amelia', 'Wagner', 'awagner@ksu.edu', 5, 'CHEM_E'),
+      ('Lucas', 'Martinez', 'lmartinez@ksu.edu', 2, 'POWER_UP'),
+      ('Harper', 'Lee', 'hlee@ksu.edu', 7, 'DRAFT_ING'),
+      ('Alexander', 'Dixon', 'adixon@ksu.edu', 9, 'NUCLEAR_S'),
+      ('Evelyn', 'Grant', 'egrant@ksu.edu', 8, 'BUILDIT'),
+      ('Daniel', 'Moore', 'dmoore@ksu.edu', 1, 'SQL_PRO'),
+      ('Abigail', 'Stone', 'astone@ksu.edu', 3, 'HARDWARE'),
+      ('Henry', 'Price', 'hprice@ksu.edu', 4, 'GEARS9'),
+      ('Emily', 'Foster', 'efoster@ksu.edu', 5, 'BOTTLE7'),
+      ('Jackson', 'Reed', 'jreed@ksu.edu', 6, 'FACTORY1'),
+      ('Elizabeth', 'Kelly', 'ekelly@ksu.edu', 2, 'CIRCUIT'),
+      ('Sebastian', 'Webb', 'swebb@ksu.edu', 7, 'STEEL_3'),
+      ('Sofia', 'Reyes', 'sreyes@ksu.edu', 9, 'BME_FUTURE'),
+      ('Matthew', 'Black', 'mblack@ksu.edu', 1, 'BITS_BYTES'),
+      ('Luna', 'Woods', 'lwoods@ksu.edu', 3, 'LOGIC_L'),
+      ('Jacob', 'Cole', 'jcole@ksu.edu', 4, 'TORQUE'),
+      ('Chloe', 'Vance', 'cvance@ksu.edu', 8, 'SITE_VISIT');
+      --End AI
 INSERT INTO RoomReservation (RoomPassword, StartTime, EndTime, RoomId, StudentId, ReservationDuration)
 VALUES ('Patrice', '2026-04-24 10:00:00', '2026-04-24 12:00:00', 1, 1, '2 Hours'),
 ('TestPass', '2026-04-22 13:00:00', '2026-04-22 15:00:00', 1, 2, '2 Hours');
