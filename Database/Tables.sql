@@ -165,7 +165,8 @@ VALUES (101),
        (234),
        (235),
        (236),
-       (237);
+       (237),
+       (333);
 INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
 VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1, 'JOHN');
 INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
@@ -462,7 +463,12 @@ VALUES(1, 'Monday', '8:00:00', '20:00:00'),
       (9, 'Tuesday', '8:00:00', '20:00:00'),
       (9, 'Wednesday', '8:00:00', '20:00:00'),
       (9, 'Thursday', '8:00:00', '20:00:00'),
-      (9, 'Friday', '8:00:00', '12:00:00');
+      (9, 'Friday', '8:00:00', '12:00:00'),
+      (10, 'Monday', '8:00:00', '16:00:00'),
+      (10, 'Tuesday', '8:00:00', '16:00:00'),
+      (10, 'Wednesday', '8:00:00', '16:00:00'),
+      (10, 'Thursday', '8:00:00', '16:00:00'),
+      (10, 'Friday', '8:00:00', '12:00:00');
 SELECT * FROM RoomReservation;
 SELECT * FROM Student;
 SELECT * FROM Laptop;
