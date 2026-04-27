@@ -2,8 +2,8 @@
 --calculates the total number of bookings, hours the room was checked out for, and the average duration 
 --of checkout times, then ranks the rooms by most to least used.
 
-DECLARE @StartDate DATETIME = '2025-01-01';
-DECLARE @EndDate DATETIME = '2025-12-31';
+DECLARE @StartDate DATETIME = '2022-01-01';
+DECLARE @EndDate DATETIME = '2026-4-1';
 
 WITH FilteredReservations AS (
 	SELECT R.RoomNumber, RR.StartTime, RR.EndTime
