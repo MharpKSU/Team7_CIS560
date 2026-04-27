@@ -72,7 +72,7 @@ async function buildCalendar(selectedDate) {
         }
         html += '</tr>';
         for (let laptopObj of data.laptops) {
-            let displayName = `Laptop ${laptopObj.LaptopNumber} (${laptopObj.LaptopMake})`;
+            let displayName = `Laptop ${laptopObj.LaptopId} (${laptopObj.LaptopMake})`;
             html += `<tr><td class="laptop-name">${displayName}</td>`;
             for (let i = 0; i < times.length; i++) {
                 let timeStr = times[i];
@@ -86,9 +86,9 @@ async function buildCalendar(selectedDate) {
                     });
                 }
                 if (isReserved) {
-                    html += `<td class="unavailable" data-laptop="${laptopObj.LaptopNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
+                    html += `<td class="unavailable" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
                 } else {
-                    html += `<td class="available time-block" data-laptop="${laptopObj.LaptopNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
+                    html += `<td class="available time-block" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
                 }
             }
             html += '</tr>';

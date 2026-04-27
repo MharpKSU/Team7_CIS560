@@ -75,6 +75,108 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
+app.post('/api/add-students', async (req, res) => {
+    const { firstName, lastName, email, majorId, password } = req.body;
+    try {
+        await sql.connect(dbConfig);
+
+        const request = new sql.Request();
+        request.input('fname', sql.NVarChar, firstName);
+        request.input('lname', sql.NVarChar, lastName);
+        request.input('email', sql.NVarChar, email);
+        request.input('mid', sql.Int, majorId);
+        request.input('pass', sql.NVarChar, password);
+
+        await request.query(`
+            INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password])
+            VALUES (@fname, @lname, @email, @mid, @pass)
+        `);
+        
+        res.json({ success: true, message: "Student created" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.post('/api/room-reservations', async (req, res) => {
+    const { roomPassword, startTime, endTime, roomId, studentId, reservationDuration } = req.body;
+    
+    try {
+        
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('pass', sql.NVarChar, roomPassword);
+        request.input('start', sql.DateTime, startTime);
+        request.input('end', sql.DateTime, endTime);
+        request.input('rid', sql.Int, roomId);
+        request.input('sid', sql.Int, studentId);
+        request.input('dur', sql.NVarChar, reservationDuration);
+
+        const query = `
+            INSERT INTO RoomReservation (RoomPassword, StartTime, EndTime, RoomId, StudentId, ReservationDuration)
+            VALUES (@pass, @start, @end, @rid, @sid, @dur)
+        `;
+
+        await request.query(query);
+        
+        res.json({ success: true, message: "Reservation made" });
+    } catch (err) {
+        console.error("SQL Error:", err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.post('/api/add-laptop', async (req, res) =>
+{
+    const{laptopMake, laptopModel, dateActivated, dateDeactivated} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('lMake', sql.NVarChar, laptopMake);
+        request.input('lModel', sql.NVarChar, laptopModel);
+        request.input('dActivated', sql.DateTime, dateActivated);
+
+        //allows for dDeactivated to be entered as "" and be null
+        const deactValue = dateDeactivated && dateDeactivated !== "" ? dateDeactivated : null;
+        request.input('dDeactivated', sql.DateTime, deactValue);
+
+        await request.query(` 
+            INSERT INTO Laptop (LaptopMake, LaptopModel,  DateActivated, DateDeactivated)
+            VALUES (@lMake, @lModel, @dActivated, @dDeactivated)
+        `);
+        res.json({ success: true, message: "Laptop Added"});
+    } 
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.post('/api/laptop-reservations', async (req, res) =>{
+    const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('reservation', sql.NVarChar, reservationDateTime);
+        request.input('stid', sql.Int, studentId);
+        request.input('drop', sql.DateTime, dropOffTime);
+        request.input('pick', sql.DateTime, pickUpTime);
+        request.input('lapid', sql.Int, laptopId);
+        const query = `
+           INSERT INTO LaptopReservation (ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
+           VALUES(@reservation, @stid, @drop, @pick, @lapid)
+        `;
+        await request.query(query);
+        res.json({success: true, message: "Reservation made"});
+    } catch(err){
+        console.error("SQL Error:", err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.listen(3000, () => {
     console.log('server running open http://localhost:3000/home.html in browser');
 });
@@ -123,7 +225,7 @@ app.get('/api/laptopCal', async (req, res) => {
         await sql.connect(dbConfig);
         const request = new sql.Request();
         const laptopQuery = `
-            SELECT LaptopId, LaptopNumber, LaptopMake, LaptopModel 
+            SELECT LaptopId,LaptopMake, LaptopModel 
             FROM Laptop
             WHERE DateDeactivated IS NULL OR DateDeactivated > GETDATE()
         `;
