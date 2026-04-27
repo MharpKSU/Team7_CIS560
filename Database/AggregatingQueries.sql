@@ -51,9 +51,9 @@ TimeData AS (
 ),
 RankedData AS (
     SELECT *,
-        RANK() OVER (
+        ROW_NUMBER() OVER (
             PARTITION BY DayOfWeek
-            ORDER BY TotalReservations DESC
+            ORDER BY TotalReservations DESC, TotalDuration DESC
         ) AS PeakTimeRank
     FROM TimeData
 )
@@ -71,7 +71,8 @@ CONCAT(
     ) AS HourOfDay, 
 TotalReservations, TotalDuration, PeakTimeRank
 FROM RankedData
-ORDER BY DayOfWeek, PeakTimeRank;
+WHERE PeakTimeRank <=3
+ORDER BY PeakTimeRank, DayOfWeek;
 
 
 --Laptop maintenance report: This will show a maintenance report/history for the laptops. 
