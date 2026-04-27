@@ -97,6 +97,36 @@ app.post('/api/students', async (req, res) => {
     }
 });
 
+app.post('/api/room-reservations', async (req, res) => {
+    const { roomPassword, startTime, endTime, roomId, studentId, reservationDuration } = req.body;
+    
+    try {
+        // Ensure we are connected to the database
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        // Mapping the data to SQL parameters
+        request.input('pass', sql.NVarChar, roomPassword);
+        request.input('start', sql.DateTime, startTime);
+        request.input('end', sql.DateTime, endTime);
+        request.input('rid', sql.Int, roomId);
+        request.input('sid', sql.Int, studentId);
+        request.input('dur', sql.NVarChar, reservationDuration);
+
+        const query = `
+            INSERT INTO RoomReservation (RoomPassword, StartTime, EndTime, RoomId, StudentId, ReservationDuration)
+            VALUES (@pass, @start, @end, @rid, @sid, @dur)
+        `;
+
+        await request.query(query);
+        
+        res.json({ success: true, message: "Reservation made" });
+    } catch (err) {
+        console.error("SQL Error:", err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.listen(3000, () => {
     console.log('server running open http://localhost:3000/home.html in browser');
 });
