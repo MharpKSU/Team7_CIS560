@@ -22,7 +22,7 @@ async function runTester() {
       const password = await question('Password: ');
 
       const data = { firstName, lastName, email, majorId: parseInt(majorId), password };
-      await sendRequest('http://localhost:3000/api/students', data);
+      await sendRequest('http://localhost:3000/api/add-students', data);
 
     } else if (choice === '2') {
       

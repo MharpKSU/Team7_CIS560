@@ -4,7 +4,6 @@
 //npm install msnodesqlv8
 //npm install express-session
 const express = require('express');
-const { request } = require('http');
 const sql = require('mssql/msnodesqlv8');
 const path = require('path');
 const app = express();
@@ -80,6 +79,7 @@ app.post('/api/add-students', async (req, res) => {
     const { firstName, lastName, email, majorId, password } = req.body;
     try {
         await sql.connect(dbConfig);
+
         const request = new sql.Request();
         request.input('fname', sql.NVarChar, firstName);
         request.input('lname', sql.NVarChar, lastName);
