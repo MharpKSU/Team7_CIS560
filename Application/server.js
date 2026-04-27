@@ -75,7 +75,7 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-app.post('/api/students', async (req, res) => {
+app.post('/api/add-students', async (req, res) => {
     const { firstName, lastName, email, majorId, password } = req.body;
     try {
         const request = new sql.Request(); // This automatically uses the global connection
@@ -101,11 +101,10 @@ app.post('/api/room-reservations', async (req, res) => {
     const { roomPassword, startTime, endTime, roomId, studentId, reservationDuration } = req.body;
     
     try {
-        // Ensure we are connected to the database
+        
         await sql.connect(dbConfig);
         const request = new sql.Request();
 
-        // Mapping the data to SQL parameters
         request.input('pass', sql.NVarChar, roomPassword);
         request.input('start', sql.DateTime, startTime);
         request.input('end', sql.DateTime, endTime);
@@ -122,6 +121,28 @@ app.post('/api/room-reservations', async (req, res) => {
         
         res.json({ success: true, message: "Reservation made" });
     } catch (err) {
+        console.error("SQL Error:", err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
+app.post('/api/laptop-reservations', async (req, res) =>{
+    const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('reservation', sql.NVarChar, reservationDateTime);
+        request.input('stid', sql.Int, studentId);
+        request.input('drop', sql.DateTime, dropOffTime);
+        request.input('pick', sql.DateTime, pickUpTime);
+        request.input('lapid', sql.Int, laptopId);
+        const query = `
+           INSERT INTO LaptopReservation (ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
+           VALUES(@reservation, @stid, @drop, @pick, @lapid)
+        `;
+        await request.query(query);
+        res.json({success: true, message: "Reservation made"});
+    } catch(err){
         console.error("SQL Error:", err);
         res.status(500).json({ success: false, message: err.message });
     }

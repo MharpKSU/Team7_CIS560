@@ -9,7 +9,7 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function runTester() {
   console.log('--- KSU Database Tester ---');
-  console.log('1: Create Student\n2: Create Room Reservation');
+  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation');
   const choice = await question('Select an option: ');
 
   try {
@@ -25,7 +25,7 @@ async function runTester() {
       await sendRequest('http://localhost:3000/api/students', data);
 
     } else if (choice === '2') {
-      // Room Reservation Logic
+      
       const roomPassword = await question('Room Password: ');
       const startTime = await question('Start Time (YYYY-MM-DD HH:MM): ');
       const endTime = await question('End Time (YYYY-MM-DD HH:MM): ');
@@ -43,7 +43,19 @@ async function runTester() {
       };
       await sendRequest('http://localhost:3000/api/room-reservations', data);
 
-    } else {
+    }
+    else if(choice === '3'){
+      const reservationDateTime = await question('DateTime: ');
+      const studentId = await question('Student Id: ');
+      const pickUpTime = await question('Pick Up Time (YYYY-MM-DD HH:MM): ');
+      const dropOffTime = await question('Drop Off Time (YYYY-MM-DD HH:MM): ');
+      const laptopId = await question('Laptop Id: ');
+
+      const data = {reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId};
+      await sendRequest('http://localhost:3000/api/laptop-reservations', data);
+    }
+    else 
+    {
       console.log('Invalid selection.');
     }
   } catch (err) {
