@@ -9,7 +9,7 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function runTester() {
   console.log('--- KSU Database Tester ---');
-  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation');
+  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop');
   const choice = await question('Select an option: ');
 
   try {
@@ -53,6 +53,15 @@ async function runTester() {
 
       const data = {reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId};
       await sendRequest('http://localhost:3000/api/laptop-reservations', data);
+    }
+    else if(choice === '4'){
+      const laptopMake = await question('Laptop make: ');
+      const laptopModel = await question('Laptop model: ');
+      const dateActivated = await question('Date activated (YYYY-MM-DD HH:MM): ');
+      const dateDeactivated = await question('Date deactivated (YYYY-MM-DD HH:MM): ')
+      
+      const data = {laptopMake, laptopModel, dateActivated, dateDeactivated};
+      await sendRequest('http://localhost:3000/api/add-laptop', data);
     }
     else 
     {

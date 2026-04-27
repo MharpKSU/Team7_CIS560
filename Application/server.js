@@ -4,6 +4,7 @@
 //npm install msnodesqlv8
 //npm install express-session
 const express = require('express');
+const { request } = require('http');
 const sql = require('mssql/msnodesqlv8');
 const path = require('path');
 const app = express();
@@ -78,7 +79,8 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/add-students', async (req, res) => {
     const { firstName, lastName, email, majorId, password } = req.body;
     try {
-        const request = new sql.Request(); // This automatically uses the global connection
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
         request.input('fname', sql.NVarChar, firstName);
         request.input('lname', sql.NVarChar, lastName);
         request.input('email', sql.NVarChar, email);
@@ -126,6 +128,32 @@ app.post('/api/room-reservations', async (req, res) => {
     }
 });
 
+app.post('/api/add-laptop', async (req, res) =>
+{
+    const{laptopMake, laptopModel, dateActivated, dateDeactivated} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('lMake', sql.NVarChar, laptopMake);
+        request.input('lModel', sql.NVarChar, laptopModel);
+        request.input('dActivated', sql.DateTime, dateActivated);
+
+        //allows for dDeactivated to be entered as "" and be null
+        const deactValue = dateDeactivated && dateDeactivated !== "" ? dateDeactivated : null;
+        request.input('dDeactivated', sql.DateTime, deactValue);
+
+        await request.query(` 
+            INSERT INTO Laptop (LaptopMake, LaptopModel,  DateActivated, DateDeactivated)
+            VALUES (@lMake, @lModel, @dActivated, @dDeactivated)
+        `);
+        res.json({ success: true, message: "Laptop Added"});
+    } 
+    catch(err)
+    {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
 
 app.post('/api/laptop-reservations', async (req, res) =>{
     const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
