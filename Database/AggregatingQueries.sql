@@ -57,7 +57,19 @@ RankedData AS (
         ) AS PeakTimeRank
     FROM TimeData
 )
-SELECT DayOfWeek, HourOfDay, TotalReservations, TotalDuration, PeakTimeRank
+SELECT DayOfWeek,
+CONCAT(
+        CASE 
+            WHEN HourOfDay = 0 THEN 12
+            WHEN HourOfDay > 12 THEN HourOfDay - 12
+            ELSE HourOfDay
+        END,
+        CASE 
+            WHEN HourOfDay < 12 THEN ' AM'
+            ELSE ' PM'
+        END
+    ) AS HourOfDay, 
+TotalReservations, TotalDuration, PeakTimeRank
 FROM RankedData
 ORDER BY DayOfWeek, PeakTimeRank;
 
