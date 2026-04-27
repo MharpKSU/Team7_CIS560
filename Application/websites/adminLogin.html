@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="/styles/homestyle.css">
+<title>KStateReservations</title>
+<header class="header">
+    <div class="leftHeader">
+        <img src="/websitePics/Kansas-State-Wildcats-logo.png" alt="KStateLogo" width="60" height="30">
+        <div class="dividerLine"></div>
+        <h1>Carl R. Ice College of Engineering</h1>
+    </div>
+
+</header>
+
+<body>
+    <div class="container">
+        
+        <p class="pleaseLogin">Admins login to add students and laptops to the database.</p>
+        <div class="inputBox">
+            <input type="text" placeholder="Email" id="emailLogin" required>
+        </div>
+        <div class="inputBox">
+            <input type="password" placeholder="Password" id="passLogin">
+        </div>
+        <div class="loginBtn">
+            <button type="button" id="loginBtn">Login</button>
+            <script src="/controllers/adminLoginController.js"></script>
+            <p id="loginOutput"></p>
+        </div>
+    </div>
+
+    <script src="/controllers/adminLoginController.js"></script>
+</body>
+</html>

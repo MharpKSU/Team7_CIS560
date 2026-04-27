@@ -98,3 +98,19 @@ body {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+/* FOR ADMIN BUTTON*/
+.adminLoginBtn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 14px;
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-family: inherit;
+}
+
+.adminLoginBtn:hover {
+        background-color: #555;
+}

@@ -51,6 +51,7 @@ Create TABLE Student(
     MajorId INT NULL,
     Email NVARCHAR(255) NOT NULL,
     [Password] NVARCHAR(30) NOT NULL,
+    IsAdmin BIT NOT NULL DEFAULT 0,
     UNIQUE(Email),
     CONSTRAINT FK_Major FOREIGN KEY (MajorId) REFERENCES Major(MajorId)
 )
