@@ -151,3 +151,17 @@ th {
     background-color: #28a745;
     color: white;
 }
+
+.confirmButton{
+  margin-top: 0;
+  height: 35px;
+  margin-left: 20px;
+  background-color: #512888; 
+  color: white; 
+}
+.confirmDiv{
+  display: flex; 
+  align-items: center; 
+  gap: 15px;
+  height: 60px;
+}

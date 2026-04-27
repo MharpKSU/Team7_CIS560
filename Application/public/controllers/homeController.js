@@ -13,6 +13,7 @@ document.getElementById('loginBtn').addEventListener('click', async function(){
             loginOutput.innerText = data.dbMessage;
             console.log("SECOND PAGE NOW");
             setTimeout(() => {window.location.href = `/roomPage`;  }, 1000);
+            sessionStorage.setItem('userEmail', emailInput);
         }
         else {
             loginOutput.style.color = "red";

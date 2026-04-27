@@ -36,14 +36,6 @@ function convertMinsToHeader(mins) {
     let minStr = minutes < 10 ? '0' + minutes : minutes;
     return `${hours}:${minStr} ${modifier}`;
 }
-function parseReservationString(resString) {
-    const parts = resString.split(' To ');
-    const startTimeStr = parts[0].split(' ')[1]; 
-    const endTimeStr = parts[1].split(' ')[1];
-    const startMins = (parseInt(startTimeStr.split(':')[0]) * 60) + parseInt(startTimeStr.split(':')[1]);
-    const endMins = (parseInt(endTimeStr.split(':')[0]) * 60) + parseInt(endTimeStr.split(':')[1]);
-    return { start: startMins, end: endMins };
-}
 
 
 
@@ -119,9 +111,14 @@ async function buildCalendar(selectedDate) {
     }
     
 }
-
+const confirmRes = document.getElementById('confirmRes');
+let finalStartTime;
+let finalEndTime;
 //lsitens for user to click different times for their resevation
 function attachClickListeners() {
+    confirmRes.disabled = true;
+    confirmRes.style.opacity = "0.5";
+    confirmRes.style.cursor = "not-allowed";
     let firstClickBlock = null;
     
     const blocks = document.querySelectorAll('.time-block');
@@ -130,6 +127,9 @@ function attachClickListeners() {
         block.addEventListener('click', function() {
             if (firstClickBlock === null) {
                 blocks.forEach(b => b.classList.remove('selected'));
+                confirmRes.disabled = true;
+                confirmRes.style.opacity = "0.5";
+                confirmRes.style.cursor = "not-allowed";
                 
                 firstClickBlock = this; 
                 this.classList.add('selected'); 
@@ -164,11 +164,15 @@ function attachClickListeners() {
                         }
                     }
                 });
-
-                const finalStartTime = times[startIndex];
-                const finalEndTime = times[endIndex];
+                finalStartTime = times[startIndex];
+                finalEndTime = times[endIndex];
                 document.getElementById('selection-output').innerText = 
                     `Ready to book: ${room} from ${finalStartTime} to ${finalEndTime}.`;
+                if (firstClickBlock != null) {
+                    confirmRes.disabled = false;
+                    confirmRes.style.opacity = "1";
+                    confirmRes.style.cursor = "pointer";
+                }
                 firstClickBlock = null; 
             }
         });
@@ -181,4 +185,59 @@ typeDropdown.addEventListener('change', function() {
     if (selectedChoice === 'Laptops') {
         window.location.href = '/laptopPage'; 
     } 
+});
+
+
+//confrim res section!
+const modal = document.getElementById('reservationModal');
+const passwordStep = document.getElementById('passwordStep');
+const successStep = document.getElementById('successStep');
+const passwordInput = document.getElementById('roomPassword');
+const submitBtn = document.getElementById('submitBtn');
+const displayEmail = document.getElementById('displayEmail');
+const displayStartTime = document.getElementById('displayStartTime');
+const displayEndTime = document.getElementById('displayEndTime');
+const displayDate = document.getElementById('displayDate');
+
+//opens confriming pop up
+function openModal() {
+    modal.style.display = 'flex';
+    const savedEmail = sessionStorage.getItem('userEmail');
+    displayEmail.textContent = savedEmail ? savedEmail : "Guest User";
+    displayStartTime.textContent = finalStartTime;
+    displayEndTime.textContent = finalEndTime;
+}
+
+//closes confirming pop up
+function closeModal() {
+    modal.style.display = 'none';
+    document.getElementById('roomPassword').value = '';
+}
+//for submitting the reservations
+function submitReservation() {
+    const password = document.getElementById('roomPassword').value;
+    if (password === "") {
+        alert("Please enter a password.");
+        return;
+    }
+    passwordStep.style.display = 'none';
+    successStep.style.display = 'block';
+    //logs out user
+    setTimeout(() => {
+        alert("Logging out...");
+        window.location.href = "home.html";
+    }, 3000);
+}
+//password creation
+passwordInput.addEventListener('input', () => {
+    passwordInput.value = passwordInput.value.replace(/[^0-9]/g, '');
+    if (passwordInput.value.length === 4) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        submitBtn.style.cursor = "pointer";
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = "0.5";
+        submitBtn.style.cursor = "not-allowed";
+    }
 });
