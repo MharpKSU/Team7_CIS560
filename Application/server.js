@@ -20,6 +20,16 @@ const dbConfig ={
     }
 };
 
+sql.connect(dbConfig).then(pool => {
+    console.log("Connected to SQL Server successfully.");
+    
+    app.listen(3000, () => {
+        console.log('Server running: http://localhost:3000/websites/home.html');
+    });
+}).catch(err => {
+    console.error("Database connection failed! Server not started.", err);
+});
+
 app.post('/api/login', async (req, res) => {
     const email = req.body.email;
     const pass = req.body.pass;
@@ -42,6 +52,28 @@ app.post('/api/login', async (req, res) => {
         //enable TCP/IP protocol for MSSQLSERVER
         console.error("ERROR:", e);
         res.status(500).json({dbMessage: "SERVER ERROR"})
+    }
+});
+
+app.post('/api/students', async (req, res) => {
+    const { firstName, lastName, email, majorId, password } = req.body;
+    try {
+        const request = new sql.Request(); // This automatically uses the global connection
+        request.input('fname', sql.NVarChar, firstName);
+        request.input('lname', sql.NVarChar, lastName);
+        request.input('email', sql.NVarChar, email);
+        request.input('mid', sql.Int, majorId);
+        request.input('pass', sql.NVarChar, password);
+
+        await request.query(`
+            INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password])
+            VALUES (@fname, @lname, @email, @mid, @pass)
+        `);
+        
+        res.json({ success: true, message: "Student created" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
     }
 });
 

@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS RoomReservation; 
-DROP TABLE IF EXISTS LaptopReservation; 
+DROP TABLE IF EXISTS LaptopReservation. 
 DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS RoomAvailability; 
 
