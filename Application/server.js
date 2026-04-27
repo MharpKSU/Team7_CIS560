@@ -126,6 +126,7 @@ app.post('/api/room-reservations', async (req, res) => {
     }
 });
 
+
 app.post('/api/laptop-reservations', async (req, res) =>{
     const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
     try{
@@ -196,7 +197,7 @@ app.get('/api/laptopCal', async (req, res) => {
         await sql.connect(dbConfig);
         const request = new sql.Request();
         const laptopQuery = `
-            SELECT LaptopId, LaptopNumber, LaptopMake, LaptopModel 
+            SELECT LaptopId,LaptopMake, LaptopModel 
             FROM Laptop
             WHERE DateDeactivated IS NULL OR DateDeactivated > GETDATE()
         `;
