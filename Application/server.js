@@ -2,6 +2,7 @@
 //tools downloaded:
 //npm install express mssql
 //npm install msnodesqlv8
+//npm install express-session
 const express = require('express');
 const sql = require('mssql/msnodesqlv8');
 const path = require('path');
@@ -20,14 +21,31 @@ const dbConfig ={
     }
 };
 
-sql.connect(dbConfig).then(pool => {
-    console.log("Connected to SQL Server successfully.");
-    
-    app.listen(3000, () => {
-        console.log('Server running: http://localhost:3000/websites/home.html');
+const checkAuth = (req, res, next) => {
+    const cookieHeader = req.headers.cookie || "";
+    if (cookieHeader.includes("isLoggedIn=true")) {
+        next(); 
+    } else {
+        res.redirect('/home.html'); 
+    }
+};
+
+app.get('/roomPage', checkAuth, (req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
     });
-}).catch(err => {
-    console.error("Database connection failed! Server not started.", err);
+    res.sendFile(path.join(__dirname, 'websites', 'roomPage.html'));
+});
+
+app.get('/laptopPage', checkAuth, (req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+    });
+   res.sendFile(path.join(__dirname, 'websites', 'laptopPage.html'));
 });
 
 app.post('/api/login', async (req, res) => {
@@ -42,10 +60,12 @@ app.post('/api/login', async (req, res) => {
         const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass');
         if (result.recordset.length > 0) {
             console.log('right');
-            res.json({ success: true, dbMessage:"Logging In..." });
+            res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
+            return res.json({ success: true, dbMessage:"Logging In..." });
         } else {
-            res.json({ success: false, dbMessage:"Not Found - Try again or contact support for help." });
+            return res.json({ success: false, dbMessage:"Not Found - Try again or contact support for help." });
         }
+
     }
     catch(e){
         //if ConnectionError: failed to connect to localhost:1433 happens
@@ -78,7 +98,7 @@ app.post('/api/students', async (req, res) => {
 });
 
 app.listen(3000, () => {
-    console.log('server running open http://localhost:3000/websites/home.html in browser');
+    console.log('server running open http://localhost:3000/home.html in browser');
 });
 
 app.get('/api/roomCal', async (req, res) => {
@@ -124,8 +144,6 @@ app.get('/api/laptopCal', async (req, res) => {
     try {
         await sql.connect(dbConfig);
         const request = new sql.Request();
-        
-        // 1. Get all laptops that aren't deactivated yet
         const laptopQuery = `
             SELECT LaptopId, LaptopNumber, LaptopMake, LaptopModel 
             FROM Laptop
@@ -133,8 +151,6 @@ app.get('/api/laptopCal', async (req, res) => {
         `;
         const laptopResult = await request.query(laptopQuery);
         let laptops = laptopResult.recordset;
-
-        // 2. Get laptop reservations for this specific date
         request.input('searchDate', sql.NVarChar, `%${requestedDate}%`);
         const resQuery = `
             SELECT LaptopId, ReserveDateTime 
@@ -143,13 +159,9 @@ app.get('/api/laptopCal', async (req, res) => {
         `;
         const resResult = await request.query(resQuery);
         const reservations = resResult.recordset;
-
-        // 3. Bundle the reservations into the specific laptops
         laptops.forEach(laptop => {
             laptop.bookedSlots = reservations.filter(res => res.LaptopId === laptop.LaptopId);
         });
-
-        // Send it to the frontend!
         res.json({ success: true, laptops: laptops });
         
     } catch(e) {
