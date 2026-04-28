@@ -17,6 +17,17 @@ dateInput.addEventListener('change', () => {
     buildCalendar(dateInput.value); 
 });
 
+function formatSQLDatetime(dateValue, timeValue) {
+    let [time, modifier] = timeValue.split(' ');
+    let [hours, minutes] = time.split(':');
+    let h = parseInt(hours, 10);
+    if (modifier === 'PM' && h < 12) h += 12;
+    if (modifier === 'AM' && h === 12) h = 0;
+    const HH = String(h).padStart(2, '0');
+    const MM = String(minutes).padStart(2, '0');
+    return `${dateValue} ${HH}:${MM}:00`;
+}
+
 function convertHeaderToMins(timeStr) {
     const [time, modifier] = timeStr.split(' ');
     let [hours, minutes] = time.split(':');
@@ -35,18 +46,6 @@ function convertMinsToHeader(mins) {
     let minStr = minutes < 10 ? '0' + minutes : minutes;
     return `${hours}:${minStr} ${modifier}`;
 }
-function parseReservationString(resString) {
-    const parts = resString.split(' To ');
-    const startTimeStr = parts[0].split(' ')[1]; 
-    const endTimeStr = parts[1].split(' ')[1];
-    const startMins = (parseInt(startTimeStr.split(':')[0]) * 60) + parseInt(startTimeStr.split(':')[1]);
-    const endMins = (parseInt(endTimeStr.split(':')[0]) * 60) + parseInt(endTimeStr.split(':')[1]);
-    return { start: startMins, end: endMins };
-}
-
-
-
-
 //builds the caldender seen on checkoutPage for reservations
 async function buildCalendar(selectedDate) {
     const container = document.getElementById('calendar-container');
@@ -81,14 +80,17 @@ async function buildCalendar(selectedDate) {
                 let isReserved = false;
                 if (laptopObj.bookedSlots) {
                     isReserved = laptopObj.bookedSlots.some(slot => {
-                        let resBounds = parseReservationString(slot.ReserveDateTime);
-                        return currentSlotMins >= resBounds.start && currentSlotMins < resBounds.end;
+                        let pickTime = slot.PickupTime.split(' ')[1]; 
+                        let dropTime = slot.DropoffTime.split(' ')[1];
+                        let startMins = (parseInt(pickTime.split(':')[0]) * 60) + parseInt(pickTime.split(':')[1]);
+                        let endMins = (parseInt(dropTime.split(':')[0]) * 60) + parseInt(dropTime.split(':')[1]);
+                        return currentSlotMins >= startMins && currentSlotMins < endMins;
                     });
                 }
                 if (isReserved) {
                     html += `<td class="unavailable" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
                 } else {
-                    html += `<td class="available time-block" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
+                    html += `<td id="${laptopObj.LaptopId}" class="available time-block" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
                 }
             }
             html += '</tr>';
@@ -103,9 +105,15 @@ async function buildCalendar(selectedDate) {
     }
     
 }
-
+const confirmRes = document.getElementById('confirmRes');
+let laptopId;
+let finalStartTime;
+let finalEndTime;
 //lsitens for user to click different times for their resevation
 function attachClickListeners() {
+    confirmRes.disabled = true;
+    confirmRes.style.opacity = "0.5";
+    confirmRes.style.cursor = "not-allowed";
     let firstClickBlock = null;
     
     const blocks = document.querySelectorAll('.time-block');
@@ -148,10 +156,16 @@ function attachClickListeners() {
                     }
                 });
 
-                const finalStartTime = times[startIndex];
-                const finalEndTime = times[endIndex];
+                finalStartTime = times[startIndex];
+                finalEndTime = times[endIndex];
                 document.getElementById('selection-output').innerText = 
                     `Ready to book: Laptop ${laptop} from ${finalStartTime} to ${finalEndTime}.`;
+                if (firstClickBlock != null) {
+                    confirmRes.disabled = false;
+                    confirmRes.style.opacity = "1";
+                    confirmRes.style.cursor = "pointer";
+                    laptopId = firstClickBlock.id;
+                }
                 firstClickBlock = null; 
             }
         });
@@ -165,3 +179,67 @@ typeDropdown.addEventListener('change', function() {
         window.location.href = '/roomPage'; 
     } 
 });
+
+
+//confrim res section!
+const modal = document.getElementById('reservationModal');
+const successStep = document.getElementById('successStep');
+const submitBtn = document.getElementById('submitBtn');
+const displayEmail = document.getElementById('displayEmail');
+const displayTime = document.getElementById('displayTime');
+
+//opens confriming pop up
+function openModal() {
+    modal.style.display = 'flex';
+    const savedEmail = sessionStorage.getItem('userEmail');
+    displayEmail.textContent = savedEmail ? savedEmail : "Guest User";
+    displayTime.textContent = `${dateInput.value} ${finalStartTime} to ${finalEndTime}`;
+}
+
+//closes confirming pop up
+function closeModal() {
+    modal.style.display = 'none';
+}
+
+function testfunc(){
+    const pickupTime = formatSQLDatetime(dateInput.value, finalStartTime);
+    const dropoffTime = formatSQLDatetime(dateInput.value, finalEndTime);
+    const studentId = sessionStorage.getItem('studentId');
+    return {
+        reservationDateTime: 'wtfisthisfor',
+        studentId: parseInt(studentId),
+        dropOffTime: dropoffTime,
+        pickUpTime: pickupTime,
+        laptopId: parseInt(laptopId)
+    };
+}
+//for submitting the reservations
+async function submitReservation() {
+    passwordStep.style.display = 'none';
+    successStep.style.display = 'block';
+    const data = testfunc();
+    console.log(data);
+
+    try {
+        console.log('Sending reservation to database...', data);
+        const response = await fetch('http://localhost:3000/api/laptop-reservations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            passwordStep.style.display = 'none';
+            successStep.style.display = 'block';
+            setTimeout(() => {
+                window.location.href = "home.html"; 
+            }, 3000);
+        } else {
+            const errorMsg = await response.text();
+            alert("Reservation failed: " + errorMsg);
+        }
+    } catch (err) {
+        console.error('Connection Error:', err);
+        alert("Could not connect to the server.");
+    }
+}

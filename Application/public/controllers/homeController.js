@@ -10,14 +10,16 @@ document.getElementById('loginBtn').addEventListener('click', async function(){
         const data = await database.json();
         if(data.success){
             loginOutput.style.color = "green";
-            loginOutput.innerText = data.dbMessage;
+            loginOutput.innerText = "Logging in...";
             console.log("SECOND PAGE NOW");
             setTimeout(() => {window.location.href = `/roomPage`;  }, 1000);
             sessionStorage.setItem('userEmail', emailInput);
+            sessionStorage.setItem('studentId', parseInt(data.dbMessage));
+            console.log(parseInt(data.dbMessage));
         }
         else {
             loginOutput.style.color = "red";
-            loginOutput.innerText = data.dbMessage;
+            loginOutput.innerText = "Not Found - Try again or contact support for help.";
         }
     }
     catch(e){

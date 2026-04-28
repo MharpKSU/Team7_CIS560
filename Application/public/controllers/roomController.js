@@ -18,6 +18,17 @@ dateInput.addEventListener('change', () => {
     buildCalendar(dateInput.value); 
 });
 
+function formatSQLDatetime(dateValue, timeValue) {
+    let [time, modifier] = timeValue.split(' ');
+    let [hours, minutes] = time.split(':');
+    let h = parseInt(hours, 10);
+    if (modifier === 'PM' && h < 12) h += 12;
+    if (modifier === 'AM' && h === 12) h = 0;
+    const HH = String(h).padStart(2, '0');
+    const MM = String(minutes).padStart(2, '0');
+    return `${dateValue} ${HH}:${MM}:00`;
+}
+
 function convertHeaderToMins(timeStr) {
     const [time, modifier] = timeStr.split(' ');
     let [hours, minutes] = time.split(':');
@@ -36,9 +47,6 @@ function convertMinsToHeader(mins) {
     let minStr = minutes < 10 ? '0' + minutes : minutes;
     return `${hours}:${minStr} ${modifier}`;
 }
-
-
-
 
 //builds the caldender seen on checkoutPage for reservations
 async function buildCalendar(selectedDate) {
@@ -94,9 +102,9 @@ async function buildCalendar(selectedDate) {
                     });
                 }
                 if (isClosed || isReserved) {
-                    html += `<td class="unavailable" data-room="${roomObj.RoomNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
+                    html += `<td id="${roomObj.RoomId}" class="unavailable" data-room="${roomObj.RoomNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
                 } else {
-                    html += `<td class="available time-block" data-room="${roomObj.RoomNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
+                    html += `<td id="${roomObj.RoomId}" class="available time-block" data-room="${roomObj.RoomNumber}" data-time="${timeStr}" data-index="${i}"></td>`;
                 }
             }
             html += '</tr>';
@@ -112,6 +120,7 @@ async function buildCalendar(selectedDate) {
     
 }
 const confirmRes = document.getElementById('confirmRes');
+let roomId;
 let finalStartTime;
 let finalEndTime;
 //lsitens for user to click different times for their resevation
@@ -172,6 +181,7 @@ function attachClickListeners() {
                     confirmRes.disabled = false;
                     confirmRes.style.opacity = "1";
                     confirmRes.style.cursor = "pointer";
+                    roomId = firstClickBlock.id;
                 }
                 firstClickBlock = null; 
             }
@@ -195,17 +205,14 @@ const successStep = document.getElementById('successStep');
 const passwordInput = document.getElementById('roomPassword');
 const submitBtn = document.getElementById('submitBtn');
 const displayEmail = document.getElementById('displayEmail');
-const displayStartTime = document.getElementById('displayStartTime');
-const displayEndTime = document.getElementById('displayEndTime');
-const displayDate = document.getElementById('displayDate');
+const displayTime = document.getElementById('displayTime');
 
 //opens confriming pop up
 function openModal() {
     modal.style.display = 'flex';
     const savedEmail = sessionStorage.getItem('userEmail');
     displayEmail.textContent = savedEmail ? savedEmail : "Guest User";
-    displayStartTime.textContent = finalStartTime;
-    displayEndTime.textContent = finalEndTime;
+    displayTime.textContent = `${dateInput.value} ${finalStartTime} to ${finalEndTime}`;
 }
 
 //closes confirming pop up
@@ -213,20 +220,54 @@ function closeModal() {
     modal.style.display = 'none';
     document.getElementById('roomPassword').value = '';
 }
+
+function testfunc(){
+    const startTime = formatSQLDatetime(dateInput.value, finalStartTime);
+    const endTime = formatSQLDatetime(dateInput.value, finalEndTime);
+    const studentId = sessionStorage.getItem('studentId');
+    return {
+        startTime: startTime,
+        endTime: endTime,
+        roomPassword: document.getElementById('roomPassword').value,
+        roomId: parseInt(roomId),
+        studentId: parseInt(studentId),
+        reservationDuration: "1 hour" 
+    };
+}
 //for submitting the reservations
-function submitReservation() {
-    const password = document.getElementById('roomPassword').value;
-    if (password === "") {
+async function submitReservation() {
+    const roomPassword = document.getElementById('roomPassword').value;
+    if (roomPassword == "") {
         alert("Please enter a password.");
         return;
     }
     passwordStep.style.display = 'none';
     successStep.style.display = 'block';
-    //logs out user
-    setTimeout(() => {
-        alert("Logging out...");
-        window.location.href = "home.html";
-    }, 3000);
+    const data = testfunc();
+    console.log(data);
+
+    try {
+        console.log('Sending reservation to database...', data);
+        const response = await fetch('http://localhost:3000/api/room-reservations', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+            passwordStep.style.display = 'none';
+            successStep.style.display = 'block';
+            setTimeout(() => {
+                window.location.href = "home.html"; 
+            }, 3000);
+        } else {
+            const errorMsg = await response.text();
+            alert("Reservation failed: " + errorMsg);
+        }
+    } catch (err) {
+        console.error('Connection Error:', err);
+        alert("Could not connect to the server.");
+    }
 }
 //password creation
 passwordInput.addEventListener('input', () => {

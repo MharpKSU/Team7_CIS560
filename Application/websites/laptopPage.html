@@ -22,7 +22,7 @@
             <option value="Rooms">Rooms</option>
             <option value="Laptops" selected>Laptops</option>
         </select>
-        </header>
+    </header>
         
         <div class="date-selector">
             <label class="highlightBlocks" for="reservationDate">Select Date:</label>
@@ -31,7 +31,26 @@
         <div class="calendar" id="calendar-container"></div>
         <h3 class="highlightBlocks" id="selection-output" >Highlight blocks to select a time!</h3>
         <div class="confirmDiv">
-            <button class="confirmButton">Confirm Reservation</button>
+            <button id="confirmRes" class="confirmButton" onclick="openModal()">Confirm Reservation</button>
+        </div>
+
+        <div id="reservationModal" class="overlay">
+            <div class="content">
+                <div id="passwordStep">
+                    <h3>Create a Room Password</h3>
+                    <p>Confirming reservation for: <strong id="displayEmail"></strong></p>
+                    <p>selected time: <strong id="displayTime"></strong></p>
+                    <div class="buttons">
+                        <button onclick="closeModal()" class="cancelButton">Cancel</button>
+                        <button id="submitBtn" onclick="submitReservation()" class="confirmButton">Submit</button>
+                    </div>
+                </div>
+
+                <div id="successStep" style="display: none;">
+                    <h3>Reservation Confirmed!</h3>
+                    <p>Your room is booked. You are being logged out...</p>
+                </div>
+            </div>
         </div>
         </div>
         

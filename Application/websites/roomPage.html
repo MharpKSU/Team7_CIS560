@@ -39,10 +39,9 @@
             <div class="content">
                 <div id="passwordStep">
                     <h3>Create a Room Password</h3>
-                    <p>Enter your created password on the rooms pinpad when you arrive.</p>
+                    <p>Enter your created pin on the selected room's pinpad when you arrive.</p>
                     <p>Confirming reservation for: <strong id="displayEmail"></strong></p>
-                    <p>selected time: <strong id="displayStartTime"></strong></p>
-                    <p>selected time: <strong id="displayEndTime"></strong></p>
+                    <p>selected time: <strong id="displayTime"></strong></p>
                     <input type="password" id="roomPassword"placeholder="4-Digit Code" inputmode="numeric" maxlength="4" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
                     <div class="buttons">
                         <button onclick="closeModal()" class="cancelButton">Cancel</button>

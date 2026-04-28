@@ -17,7 +17,7 @@ const dbConfig ={
     options: {
         trustedConnection: true,
         encrypt: false,
-        trustServerCertificate: true
+        trustServerCertificate: true,
     }
 };
 
@@ -59,11 +59,10 @@ app.post('/api/login', async (req, res) => {
         request.input('pass', sql.NVarChar, pass);
         const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass');
         if (result.recordset.length > 0) {
-            console.log('right');
             res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
-            return res.json({ success: true, dbMessage:"Logging In..." });
+            return res.json({ success: true, dbMessage: result.recordset[0].StudentId });
         } else {
-            return res.json({ success: false, dbMessage:"Not Found - Try again or contact support for help." });
+            return res.json({ success: false, dbMessage:"0" });
         }
 
     }
@@ -108,8 +107,8 @@ app.post('/api/room-reservations', async (req, res) => {
         const request = new sql.Request();
 
         request.input('pass', sql.NVarChar, roomPassword);
-        request.input('start', sql.DateTime, startTime);
-        request.input('end', sql.DateTime, endTime);
+        request.input('start', sql.VarChar, startTime);
+        request.input('end', sql.VarChar, endTime);
         request.input('rid', sql.Int, roomId);
         request.input('sid', sql.Int, studentId);
         request.input('dur', sql.NVarChar, reservationDuration);
@@ -162,8 +161,8 @@ app.post('/api/laptop-reservations', async (req, res) =>{
         const request = new sql.Request();
         request.input('reservation', sql.NVarChar, reservationDateTime);
         request.input('stid', sql.Int, studentId);
-        request.input('drop', sql.DateTime, dropOffTime);
-        request.input('pick', sql.DateTime, pickUpTime);
+        request.input('drop', sql.VarChar, dropOffTime);
+        request.input('pick', sql.VarChar, pickUpTime);
         request.input('lapid', sql.Int, laptopId);
         const query = `
            INSERT INTO LaptopReservation (ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
@@ -231,11 +230,13 @@ app.get('/api/laptopCal', async (req, res) => {
         `;
         const laptopResult = await request.query(laptopQuery);
         let laptops = laptopResult.recordset;
-        request.input('searchDate', sql.NVarChar, `%${requestedDate}%`);
+        request.input('searchDate', sql.Date, requestedDate); 
         const resQuery = `
-            SELECT LaptopId, ReserveDateTime 
+            SELECT LaptopId, 
+                FORMAT(PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime, 
+                FORMAT(DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime
             FROM LaptopReservation 
-            WHERE ReserveDateTime LIKE @searchDate
+            WHERE CAST(PickupTime AS DATE) = @searchDate
         `;
         const resResult = await request.query(resQuery);
         const reservations = resResult.recordset;
