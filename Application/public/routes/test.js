@@ -64,7 +64,7 @@ async function runTester() {
       await sendRequest('http://localhost:3000/api/add-laptop', data);
     }
     else if(choice === '5'){
-      const studentId = await question('Student Id: ')
+      const studentId = await question('Student Id: ');
       const firstName = await question('First Name: ');
       const lastName = await question('Last Name: ');
       const email = await question('Email: ');
@@ -73,6 +73,17 @@ async function runTester() {
 
       const data = {studentId: parseInt(studentId), firstName, lastName, email, majorId: parseInt(majorId), password };
       await sendRequest('http://localhost:3000/api/update-student', data);
+    }
+    else if(choice === '6')
+    {
+      const laptopId = await question('Laptop Id: ');
+      const laptopMake = await question('Laptop make: ');
+      const laptopModel = await question('Laptop model: ');
+      const dateActivated = await question('Date activated (YYYY-MM-DD HH:MM): ');
+      const dateDeactivated = await question('Date deactivated (YYYY-MM-DD HH:MM): ');
+
+      const data = {laptopId, laptopMake, laptopModel, dateActivated, dateDeactivated};
+      await sendRequest('http://localhost:3000/api/update-laptop', data);
     }
     else 
     {
