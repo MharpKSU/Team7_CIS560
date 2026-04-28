@@ -245,6 +245,28 @@ app.post('/api/laptop-reservations', async (req, res) =>{
     }
 });
 
+app.post('/api/delete-laptop-reservation', async (req, res) =>
+{
+    const{roomId} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('id', sql.Int, roomId);
+
+        const result = await request.query(`
+            DELETE FROM RoomReservation
+            WHERE RoomReservationId = @id
+            `);
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ success: false, message: "Reservation not found." });
+        }
+        res.json({ success: true, message: "Reservation deleted" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.listen(3000, () => {
     console.log('server running open http://localhost:3000/home.html in browser');
 });

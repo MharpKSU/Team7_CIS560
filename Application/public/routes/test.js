@@ -9,7 +9,7 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function runTester() {
   console.log('--- KSU Database Tester ---');
-  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop\n5: Update Student');
+  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop\n5: Update Student\n6: Update Laptop\n7: Delete Room Reservation');
   const choice = await question('Select an option: ');
 
   try {
@@ -84,6 +84,11 @@ async function runTester() {
 
       const data = {laptopId, laptopMake, laptopModel, dateActivated, dateDeactivated};
       await sendRequest('http://localhost:3000/api/update-laptop', data);
+    }
+    else if(choice === '7'){
+      const roomId = await question('Room Id: ');
+      const data = {roomId};
+      await sendRequest('http://localhost:3000/api/delete-laptop-reservation', data);
     }
     else 
     {
