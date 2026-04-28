@@ -163,6 +163,40 @@ app.post('/api/room-reservations', async (req, res) => {
     }
 });
 
+app.post('/api/update-laptop', async(req, res) =>
+{
+    const{laptopId, laptopMake, laptopModel, dateActivated, dateDeactivated} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('lapId', sql.Int, laptopId)
+        request.input('lMake', sql.NVarChar, laptopMake);
+        request.input('lModel', sql.NVarChar, laptopModel);
+        request.input('dActivated', sql.DateTime, dateActivated);
+
+        const deactValue = dateDeactivated && dateDeactivated !== "" ? dateDeactivated : null;
+        request.input('dDeactivated', sql.DateTime, deactValue);
+
+        const result = await request.query(`
+            UPDATE Laptop
+            SET LaptopMake = @lMake,
+                LaptopModel = @lModel,
+                DateActivated = @dActivated,
+                DateDeactivated = @dDeactivated
+            WHERE LaptopId = @lapId
+            `);
+        if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ success: false, message: "Laptop not found" });
+        }
+        res.json({ success: true, message: "Laptop updated successfully" });
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.post('/api/add-laptop', async (req, res) =>
 {
     const{laptopMake, laptopModel, dateActivated, dateDeactivated} = req.body;
