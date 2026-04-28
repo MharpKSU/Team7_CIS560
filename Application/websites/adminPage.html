@@ -1,19 +1,24 @@
-﻿<!DOCTYPE html>
+﻿<!--home page of our website, for now a test button is added to test if it connects to our sql database-->
+<!DOCTYPE html>
 <html>
-<link rel="stylesheet" href="styles/laptopStyle.css">
-<title>KStateReservations</title>
-<header class="header">
-    <div class="leftHeader">
-        <img src="/websitePics/Kansas-State-Wildcats-logo.png" alt="KStateLogo" width="60" height="30">
-        <div class="dividerLine"></div>
-        <h1>Carl R. Ice College of Engineering</h1>
-    </div>
+    <link rel="stylesheet" href="/styles/homestyle.css">
+    <title>KStateReservations</title>
+    <header class="header">
+        <div class="leftHeader">
+            <img src="/websitePics/Kansas-State-Wildcats-logo.png" alt="KStateLogo" width="60" height="30">
+            <div class="dividerLine"></div>
+            <h1>Carl R. Ice College of Engineering</h1>
+        </div>
+        
+    </header>
 
-</header>
+    <body>
+        <div class="container">
+            <img class="engPhoto" src="/websitePics/inside-eng-budiling.jpg" height="150px">
+            <h1 class="engPhotoText">Admin Page</h1>
 
-<body>
-    <div class="studentCreator">
-        <h2>Add Student</h2>
+            <div class="studentCreator">
+        <h2 class="resText">Add Student</h2>
 
         <input type="text" id="firstName" placeholder="First Name"><br>
         <input type="text" id="lastName" placeholder="Last Name"><br>
@@ -25,13 +30,13 @@
             <input type="checkbox" id="isAdmin"> Is Admin
         </label><br><br>
 
-        <button id="addStudentBtn">Add Student</button>
+        <button  id="addStudentBtn">Add Student</button>
 
         <p id="adminOutput"></p>
     </div>
 
     <div class="laptopCreator">
-        <h2>Add Laptop</h2>
+        <h2 class="resText">Add Laptop</h2>
 
         <input type="text" id="laptopMake" placeholder="Laptop Make"><br>
         <input type="text" id="laptopModel" placeholder="Laptop Model"><br>
@@ -47,7 +52,8 @@
         <p id="laptopOutput"></p>
     </div>
 
-
-    <script src="controllers/adminController.js"></script>
-</body>
+        </div>
+    
+        <script src="/controllers/homeController.js"></script>
+    </body>
 </html>

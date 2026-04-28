@@ -79,27 +79,4 @@ body {
   margin: 0px;
   margin-top: 0;
 }
-.pleaseLogin{
-  font-size: 15px;
-  padding-left: 20px;
-  padding-top: 5px;
-  padding-bottom: 10px;
-  margin: 0px;
-}
-/*adjusts the style of the login screen*/
-.inputBox{
-  padding-left: 25px;
-  padding-top: 5px;
-  padding-bottom: 10px;
-  margin: 0px;
-}
-.loginBtn{
-  padding-left: 25px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
 
-/* FOR ADMIN BUTTON*/
-.adminLoginBtn {
-    margin-left: 10px;
-}
