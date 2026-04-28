@@ -258,6 +258,28 @@ app.post('/api/add-laptop', async (req, res) =>
     }
 });
 
+app.post('/api/delete-laptop-reservation', async (req, res) =>
+{
+    const{laptopId} = req.body;
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('id', sql.Int, laptopId);
+
+        const result = await request.query(`
+            DELETE FROM LaptopReservation
+            WHERE LaptopReservationId = @id
+            `);
+        if (result.rowsAffected[0] === 0) {
+            return res.status(404).json({ success: false, message: "Reservation not found." });
+        }
+        res.json({ success: true, message: "Laptop reservation deleted" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.post('/api/laptop-reservations', async (req, res) =>{
     const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
     try{
@@ -280,7 +302,7 @@ app.post('/api/laptop-reservations', async (req, res) =>{
     }
 });
 
-app.post('/api/delete-laptop-reservation', async (req, res) =>
+app.post('/api/delete-room-reservation', async (req, res) =>
 {
     const{roomId} = req.body;
     try{
@@ -295,7 +317,7 @@ app.post('/api/delete-laptop-reservation', async (req, res) =>
         if (result.rowsAffected[0] === 0) {
             return res.status(404).json({ success: false, message: "Reservation not found." });
         }
-        res.json({ success: true, message: "Reservation deleted" });
+        res.json({ success: true, message: "Room reservation deleted" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, message: err.message });

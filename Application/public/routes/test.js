@@ -88,6 +88,11 @@ async function runTester() {
     else if(choice === '7'){
       const roomId = await question('Room Id: ');
       const data = {roomId};
+      await sendRequest('http://localhost:3000/api/delete-room-reservation', data);
+    }
+    else if(choice === '8'){
+      const laptopId = await question('Laptop Id: ');
+      const data = {laptopId};
       await sendRequest('http://localhost:3000/api/delete-laptop-reservation', data);
     }
     else 
