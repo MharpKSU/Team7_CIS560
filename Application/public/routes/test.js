@@ -9,12 +9,12 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function runTester() {
   console.log('--- KSU Database Tester ---');
-  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop');
+  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop\n5: Update Student');
   const choice = await question('Select an option: ');
 
   try {
     if (choice === '1') {
-      // Student Logic
+      
       const firstName = await question('First Name: ');
       const lastName = await question('Last Name: ');
       const email = await question('Email: ');
@@ -62,6 +62,17 @@ async function runTester() {
       
       const data = {laptopMake, laptopModel, dateActivated, dateDeactivated};
       await sendRequest('http://localhost:3000/api/add-laptop', data);
+    }
+    else if(choice === '5'){
+      const studentId = await question('Student Id: ')
+      const firstName = await question('First Name: ');
+      const lastName = await question('Last Name: ');
+      const email = await question('Email: ');
+      const majorId = await question('Major ID: ');
+      const password = await question('Password: ');
+
+      const data = {studentId: parseInt(studentId), firstName, lastName, email, majorId: parseInt(majorId), password };
+      await sendRequest('http://localhost:3000/api/update-student', data);
     }
     else 
     {
