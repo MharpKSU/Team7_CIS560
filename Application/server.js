@@ -98,6 +98,41 @@ app.post('/api/add-students', async (req, res) => {
     }
 });
 
+app.post('/api/update-student', async (req, res) =>
+{
+   const { studentId, firstName, lastName, email, majorId, password } = req.body;
+
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+
+        request.input('id', sql.Int, studentId);
+        request.input('fname', sql.NVarChar, firstName);
+        request.input('lname', sql.NVarChar, lastName);
+        request.input('email', sql.NVarChar, email);
+        request.input('mid', sql.Int, majorId);
+        request.input('pass', sql.NVarChar, password);
+
+        const result = await request.query(`
+            UPDATE Student 
+            SET FirstName = @fname,
+                LastName = @lname,
+                Email = @email,
+                MajorId = @mid,
+                Password = @pass
+            WHERE StudentId = @id
+            `);
+        if (result.rowsAffected[0] === 0) {
+        return res.status(404).json({ success: false, message: "Student not found" });
+        }
+
+        res.json({ success: true, message: "Student updated successfully" });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 app.post('/api/room-reservations', async (req, res) => {
     const { roomPassword, startTime, endTime, roomId, studentId, reservationDuration } = req.body;
     

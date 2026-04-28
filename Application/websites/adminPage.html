@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="styles/laptopStyle.css">
+<title>KStateReservations</title>
+<header class="header">
+    <div class="leftHeader">
+        <img src="/websitePics/Kansas-State-Wildcats-logo.png" alt="KStateLogo" width="60" height="30">
+        <div class="dividerLine"></div>
+        <h1>Carl R. Ice College of Engineering</h1>
+    </div>
+
+</header>
+
+<body>
+    <div class="studentCreator">
+        <h2>Add Student</h2>
+
+        <input type="text" id="firstName" placeholder="First Name"><br>
+        <input type="text" id="lastName" placeholder="Last Name"><br>
+        <input type="number" id="majorId" placeholder="Major ID (optional)"><br>
+        <input type="email" id="email" placeholder="Email"><br>
+        <input type="password" id="password" placeholder="Password"><br>
+
+        <label>
+            <input type="checkbox" id="isAdmin"> Is Admin
+        </label><br><br>
+
+        <button id="addStudentBtn">Add Student</button>
+
+        <p id="adminOutput"></p>
+    </div>
+
+    <div class="laptopCreator">
+        <h2>Add Laptop</h2>
+
+        <input type="text" id="laptopMake" placeholder="Laptop Make"><br>
+        <input type="text" id="laptopModel" placeholder="Laptop Model"><br>
+
+        <label>Date Activated:</label><br>
+        <input type="datetime-local" id="dateActivated"><br>
+
+        <label>Date Deactivated (optional):</label><br>
+        <input type="datetime-local" id="dateDeactivated"><br><br>
+
+        <button id="addLaptopBtn">Add Laptop</button>
+
+        <p id="laptopOutput"></p>
+    </div>
+
+
+    <script src="controllers/adminController.js"></script>
+</body>
+</html>
