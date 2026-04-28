@@ -48,6 +48,15 @@ app.get('/laptopPage', checkAuth, (req, res) => {
    res.sendFile(path.join(__dirname, 'websites', 'laptopPage.html'));
 });
 
+app.get('/adminPage', checkAuth, (req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+    });
+    res.sendFile(path.join(__dirname, 'websites', 'adminPage.html'));
+});
+
 app.post('/api/login', async (req, res) => {
     const email = req.body.email;
     const pass = req.body.pass;
@@ -61,6 +70,32 @@ app.post('/api/login', async (req, res) => {
         if (result.recordset.length > 0) {
             res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
             return res.json({ success: true, dbMessage: result.recordset[0].StudentId });
+        } else {
+            return res.json({ success: false, dbMessage:"0" });
+        }
+
+    }
+    catch(e){
+        //if ConnectionError: failed to connect to localhost:1433 happens
+        //enable TCP/IP protocol for MSSQLSERVER
+        console.error("ERROR:", e);
+        res.status(500).json({dbMessage: "SERVER ERROR"})
+    }
+});
+
+app.post('/api/adminLogin', async (req, res) => {
+    const email = req.body.email;
+    const pass = req.body.pass;
+    console.log("here");
+    try{
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('email', sql.NVarChar, email);
+        request.input('pass', sql.NVarChar, pass);
+        const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass AND IsAdmin = 1');
+        if (result.recordset.length > 0) {
+            res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
+            return res.json({ success: true, dbMessage: "success" });
         } else {
             return res.json({ success: false, dbMessage:"0" });
         }

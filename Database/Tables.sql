@@ -165,8 +165,8 @@ VALUES (101),
        (236),
        (237),
        (333);
-INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
-VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1, 'JOHN');
+INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password], IsAdmin) 
+VALUES ('Jon', 'Fuller', 'jon@ksu.edu', 1, 'JOHN', 1);
 INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password]) 
 Values('Maddie', 'Harp', 'maddie@ksu.edu', 1, 'HARP1234'),
       ('Isaac', 'Meisinger', 'isaac46@ksu.edu', 1, 'ISAAC1234'),
