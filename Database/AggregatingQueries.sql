@@ -11,7 +11,8 @@ WITH FilteredReservations AS (
 		INNER JOIN Room R ON RR.RoomId = R.RoomId
 	WHERE RR.StartTime >= @StartDate AND RR.EndTime <= @EndDate
 )
-GO
+
+
 SELECT RoomNumber, COUNT(*) AS TotalReservations,
 	SUM(DATEDIFF(HOUR, StartTime, EndTime)) AS TotalHoursReserved,
 	AVG(DATEDIFF(MINUTE, StartTime, EndTime) / 60.0) AS AverageReservationDuration,
@@ -26,8 +27,8 @@ ORDER BY PopularityRank;
 --Peak checkout times: This analyzes the peak checkout times for laptops and study rooms grouped by hour 
 --of day and day of week. This can help IT and staff know when they have the heaviest load and for example, 
 --when the help/checkout desk needs more staff. 
-DECLARE @StartDate DATETIME = '2025-01-01';
-DECLARE @EndDate   DATETIME = '2025-12-31';
+SET @StartDate = '2025-01-01';
+SET @EndDate = '2025-12-31';
 
 WITH CombinedReservations AS (
     --room
