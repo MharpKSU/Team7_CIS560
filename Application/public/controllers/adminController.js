@@ -43,14 +43,14 @@ document.getElementById('addStudentBtn').addEventListener('click', async () => {
 
 document.getElementById('addLaptopBtn').addEventListener('click', async () => {
     const laptop = {
-        make: document.getElementById('laptopMake').value,
-        model: document.getElementById('laptopModel').value,
-        dateActivated: document.getElementById('dateActivated').value,
-        dateDeactivated: document.getElementById('dateDeactivated').value || null
+    laptopMake: document.getElementById('laptopMake').value, 
+    laptopModel: document.getElementById('laptopModel').value, 
+    dateActivated: document.getElementById('dateActivated').value,
+    dateDeactivated: document.getElementById('dateDeactivated').value || null
     };
 
     try {
-        const response = await fetch('/api/addLaptop', {
+        const response = await fetch('/api/add-laptop', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(laptop)
@@ -62,6 +62,10 @@ document.getElementById('addLaptopBtn').addEventListener('click', async () => {
         if (data.success) {
             output.style.color = "green";
             output.innerText = "Laptop added to database!";
+            document.getElementById('laptopMake').value = "";
+            document.getElementById('laptopModel').value = "";
+            document.getElementById('dateActivated').value = "";
+            document.getElementById('dateDeactivated').value = "";
         } else {
             output.style.color = "red";
             output.innerText = data.message;
