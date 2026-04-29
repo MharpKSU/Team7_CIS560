@@ -14,6 +14,16 @@ dateInput.min = todayString;
 dateInput.max = maxDateString;
 dateInput.value = todayString;
 
+document.getElementById('editRes').addEventListener('click', async function(){
+    try{
+        setTimeout(() => {window.location.href = `/currentResPage`;  }, 1000);
+    }
+    catch(e){
+        console.log(e);
+    }
+
+});
+
 dateInput.addEventListener('change', () => {
     buildCalendar(dateInput.value); 
 });
@@ -174,7 +184,8 @@ function attachClickListeners() {
                     }
                 });
                 finalStartTime = times[startIndex];
-                finalEndTime = times[endIndex];
+                let actualEndMins = convertHeaderToMins(times[endIndex]) + 30;
+                finalEndTime = convertMinsToHeader(actualEndMins);
                 document.getElementById('selection-output').innerText = 
                     `Ready to book: ${room} from ${finalStartTime} to ${finalEndTime}.`;
                 if (firstClickBlock != null) {

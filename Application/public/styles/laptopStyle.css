@@ -214,3 +214,14 @@ th {
     cursor: not-allowed;
     opacity: 0.5;
 }
+
+.editRes{
+  align-items: center; 
+  justify-content: center;
+  margin-right: 50px;
+  margin-left: auto;
+  margin-top: 10px;
+  height: 35px;
+  background-color: #512888; 
+  color: white; 
+}

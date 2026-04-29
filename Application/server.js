@@ -48,6 +48,15 @@ app.get('/laptopPage', checkAuth, (req, res) => {
    res.sendFile(path.join(__dirname, 'websites', 'laptopPage.html'));
 });
 
+app.get('/currentResPage', checkAuth, (req, res) => {
+    res.set({
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+    });
+   res.sendFile(path.join(__dirname, 'websites', 'currentResPage.html'));
+});
+
 app.get('/adminPage', checkAuth, (req, res) => {
     res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -392,6 +401,55 @@ app.get('/api/laptopCal', async (req, res) => {
             laptop.bookedSlots = reservations.filter(res => res.LaptopId === laptop.LaptopId);
         });
         res.json({ success: true, laptops: laptops });
+        
+    } catch(e) {
+        console.error("ERROR:", e);
+        res.status(500).json({ success: false, dbMessage: "SERVER ERROR" });
+    }
+});
+
+app.get('/api/loadRooms', async (req, res) => {
+    const studentId = req.query.studentId
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('studentId', sql.Int, studentId);
+        const roomQuery = `
+            SELECT 
+                FORMAT(StartTime, 'yyyy-MM-dd HH:mm:ss') AS StartTime,
+                FORMAT(EndTime, 'yyyy-MM-dd HH:mm:ss') AS EndTime,
+                RoomPassword, 
+                RoomId
+            FROM RoomReservation
+            WHERE StudentId = @studentId
+        `;
+        const roomResult = await request.query(roomQuery);
+        let reservations = roomResult.recordset;
+        res.json({ success: true, reservations: reservations });
+        
+    } catch(e) {
+        console.error("ERROR:", e);
+        res.status(500).json({ success: false, dbMessage: "SERVER ERROR" });
+    }
+});
+
+app.get('/api/loadLaptops', async (req, res) => {
+    const studentId = req.query.studentId
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        request.input('studentId', sql.Int, studentId);
+        const lapQuery = `
+            SELECT 
+                FORMAT(PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime,
+                FORMAT(DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime,
+                LaptopId
+            FROM LaptopReservation
+            WHERE StudentId = @studentId 
+        `;
+        const lapResult = await request.query(lapQuery);
+        let reservations = lapResult.recordset;
+        res.json({ success: true, reservations: reservations });
         
     } catch(e) {
         console.error("ERROR:", e);

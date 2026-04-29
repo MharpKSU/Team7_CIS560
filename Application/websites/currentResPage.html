@@ -1,0 +1,58 @@
+<!--home page of our website, for now a test button is added to test if it connects to our sql database-->
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="styles/currentResStyle.css">
+    <title>KStateReservations</title>
+    <header class="header">
+        <div class="leftHeader">
+            <img src="/websitePics/Kansas-State-Wildcats-logo.png" alt="KStateLogo" width="60" height="30">
+            <div class="dividerLine"></div>
+            <h1>Carl R. Ice College of Engineering</h1>
+        </div>
+        
+    </header>
+
+    <body>
+        <div class="container">
+        <img  class="engPhoto" src="/websitePics/inside-eng-budiling.jpg" height="150px">
+        <h1 class="engPhotoText">Current Reservations</h1>
+        <header class="resOptions">
+            <h2 class="resText">My Reservations</h2>
+        </header>
+        <div class="tables-wrapper">
+            <div class="table-container">
+                <h2>Rooms</h2>
+                <table id="reservationsTable">
+                    <thead>
+                        <tr>
+                            <th>Start Time</th>
+                            <th>End Time</th>
+                            <th>Room ID</th>
+                            <th>Room Password</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsBody">
+                    </tbody>
+                </table>
+                <button id="cancelBtn" disabled>Cancel Room Reservation</button>
+            </div> <div class="table-container">
+                <h2>Laptops</h2> <table id="laptopTable">
+                    <thead>
+                        <tr>
+                            <th>Pickup Time</th>
+                            <th>Dropoff Time</th>
+                            <th>Laptop ID</th>
+                        </tr>
+                    </thead>
+                    <tbody id="laptopBody">
+                    </tbody>
+                </table>
+                <button id="cancelLaptopBtn" disabled>Cancel Laptop Reservation</button>
+            </div>
+
+        </div>
+
+        </div>
+        <script src="controllers/currentResController.js"></script>
+    </body>
+</html>

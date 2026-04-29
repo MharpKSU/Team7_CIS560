@@ -1,0 +1,184 @@
+body {
+  /* stripes for background! */
+  background: repeating-linear-gradient(
+    45deg,
+    #f4f4f4,
+    #f4f4f4 10px,
+    #ffffff 10px,
+    #ffffff 20px
+  );
+  margin: 0; 
+  font-family: Arial, sans-serif;
+}
+
+.container{
+  background-color: white;
+  /*this adjusts the size of the body panel, adjusts how much of the stripes you can see for the background bascailly*/
+  max-width: 96%; 
+  min-height: 150vh; 
+  margin: 0 auto; 
+  margin-top: 0;
+  align-items: center;
+  justify-content: center;
+  
+  /*adds a shadow between the stripes and body of website*/
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+/*this section styles the header before the photo of the eng building*/
+.header {
+  display: flex; 
+  justify-content: space-between;
+  align-items: center; 
+  height: 60px;
+  background-color: white; 
+  color: #512888; 
+  padding-left: 10px;
+}
+
+.leftHeader{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.leftHeader h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #512888;
+  margin: 0;
+}
+
+/*line in header!*/
+.dividerLine {
+  width: 2px;
+  height: 40px;
+  background-color: #512888;
+}
+
+/*this adjusts the photo of the eng building at top of website*/
+.engPhoto {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.engPhotoText {
+  display: flex; 
+  text-align: center;
+  align-items: center; 
+  justify-content: center;
+  margin-top: 0;
+  height: 80px;
+  background-color: #512888; 
+  color: white; 
+}
+
+.resText{
+  font-size: 30px;
+  font-weight: bold;
+  color: #512888;
+  padding-left: 10px;
+  padding-top: 10px;
+  margin: 0px;
+  margin-top: 0;
+}
+
+
+/* ========================================= */
+/* --- NEW SIDE-BY-SIDE TABLE LAYOUT ---     */
+/* ========================================= */
+
+/* This is the magic container that puts them side-by-side */
+.tables-wrapper {
+  display: flex;
+  justify-content: space-between; /* Pushes tables apart */
+  align-items: flex-start; /* Aligns them at the top */
+  gap: 2%; /* Creates a small gap between them */
+  padding: 0 10px;
+  margin-top: 20px;
+}
+
+/* --- Table Container Styling --- */
+.table-container {
+  width: 49%; /* Each table takes up roughly half the screen */
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  box-sizing: border-box; /* Keeps padding inside the width limits */
+}
+
+.table-container h2 {
+  margin-top: 0px;
+  color: #512888; 
+  margin-bottom: 15px;
+}
+
+/* --- The Table Grid (Applies to ALL tables automatically) --- */
+.table-container table {
+  width: 100%;
+  border-collapse: collapse; 
+  margin-bottom: 20px;
+  text-align: center; 
+}
+
+/* --- Table Headers --- */
+.table-container th {
+  background-color: #f4f4f4; 
+  color: #333;
+  font-weight: bold;
+  padding: 12px 10px;
+  border: 1px solid #ddd; 
+}
+
+/* --- Table Rows & Cells --- */
+.table-container td {
+  padding: 12px 10px;
+  border: 1px solid #ddd;
+  color: #444;
+}
+
+/* --- Interactive Row Highlights --- */
+.table-container tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table-container tbody tr:hover {
+  background-color: #f9f9f9; 
+  cursor: pointer;
+}
+
+/* The row they clicked on */
+.selected-row {
+  background-color: #e6b3ff !important; 
+  color: black;
+  font-weight: bold;
+}
+
+/* --- Cancel Button Styling --- */
+/* I added a comma to target both the room and laptop buttons! */
+#cancelBtn, #cancelLaptopBtn {
+  background-color: #512888;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+#cancelBtn:hover:not(:disabled),
+#cancelLaptopBtn:hover:not(:disabled) {
+  background-color: #3b1d63; 
+}
+
+#cancelBtn:disabled,
+#cancelLaptopBtn:disabled {
+  background-color: #cccccc; 
+  color: #888888;
+  cursor: not-allowed;
+}
