@@ -119,7 +119,7 @@ app.post('/api/adminLogin', async (req, res) => {
 });
 
 app.post('/api/add-students', async (req, res) => {
-    const { firstName, lastName, email, majorId, password } = req.body;
+    const { firstName, lastName, email, majorId, password, isAdmin } = req.body;
     try {
         await sql.connect(dbConfig);
 
@@ -129,10 +129,11 @@ app.post('/api/add-students', async (req, res) => {
         request.input('email', sql.NVarChar, email);
         request.input('mid', sql.Int, majorId);
         request.input('pass', sql.NVarChar, password);
+        request.input('admin', sql.Bit, isAdmin);
 
         await request.query(`
-            INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password])
-            VALUES (@fname, @lname, @email, @mid, @pass)
+            INSERT INTO Student (FirstName, LastName, Email, MajorId, [Password], IsAdmin)
+            VALUES (@fname, @lname, @email, @mid, @pass, @admin)
         `);
         
         res.json({ success: true, message: "Student created" });

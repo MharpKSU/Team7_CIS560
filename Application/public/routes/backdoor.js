@@ -9,7 +9,7 @@ const question = (query) => new Promise((resolve) => rl.question(query, resolve)
 
 async function runTester() {
   console.log('--- KSU Database Tester ---');
-  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop\n5: Update Student\n6: Update Laptop\n7: Delete Room Reservation');
+  console.log('1: Create Student\n2: Create a Room Reservation\n 3: Create a Laptop Reservation\n 4: Add Laptop\n5: Update Student\n6: Update Laptop\n7: Delete Room Reservation\n8: Delete a Laptop Reservation');
   const choice = await question('Select an option: ');
 
   try {
@@ -20,8 +20,9 @@ async function runTester() {
       const email = await question('Email: ');
       const majorId = await question('Major ID: ');
       const password = await question('Password: ');
+      const isAdmin = await question('Is admin(1 of yes, 0 for no): ')
 
-      const data = { firstName, lastName, email, majorId: parseInt(majorId), password };
+      const data = { firstName, lastName, email, majorId: parseInt(majorId), password,  isAdmin: parseInt(isAdmin)};
       await sendRequest('http://localhost:3000/api/add-students', data);
 
     } else if (choice === '2') {

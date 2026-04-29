@@ -2,14 +2,15 @@ document.getElementById('addStudentBtn').addEventListener('click', async () => {
     const student = {
         firstName: document.getElementById('firstName').value,
         lastName: document.getElementById('lastName').value,
-        majorId: document.getElementById('majorId').value || null,
         email: document.getElementById('email').value,
+        majorId: parseInt(document.getElementById('majorId').value) || null,
         password: document.getElementById('password').value,
-        isAdmin: document.getElementById('isAdmin').checked
+        isAdmin: document.getElementById('isAdmin').checked ? 1 : 0
+
     };
 
     try {
-        const response = await fetch('/api/addStudent', {
+        const response = await fetch('/api/add-students', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(student)
@@ -20,8 +21,16 @@ document.getElementById('addStudentBtn').addEventListener('click', async () => {
         const output = document.getElementById('adminOutput');
 
         if (data.success) {
+            
             output.style.color = "green";
             output.innerText = "Student added to database!";
+            document.getElementById('firstName').value = "";
+            document.getElementById('lastName').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('majorId').value = "";
+            document.getElementById('password').value = ""
+            document.getElementById('isAdmin').checked = false;
+
         } else {
             output.style.color = "red";
             output.innerText = data.message;
