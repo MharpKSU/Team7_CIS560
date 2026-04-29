@@ -75,6 +75,14 @@ body {
   color: white; 
 }
 
+.resOptions{
+  display: flex; 
+  gap: 15px;
+  align-items: center; 
+  height: 60px;
+  padding-left: 10px;
+}
+
 .resText{
   font-size: 30px;
   font-weight: bold;
@@ -85,29 +93,28 @@ body {
   margin-top: 0;
 }
 
+.cancel{
+  font-size: 17px;
+  padding-left: 20px;
+  margin-top: 0px;
+}
 
-/* ========================================= */
-/* --- NEW SIDE-BY-SIDE TABLE LAYOUT ---     */
-/* ========================================= */
-
-/* This is the magic container that puts them side-by-side */
 .tables-wrapper {
   display: flex;
-  justify-content: space-between; /* Pushes tables apart */
-  align-items: flex-start; /* Aligns them at the top */
-  gap: 2%; /* Creates a small gap between them */
+  justify-content: space-between; 
+  align-items: flex-start; 
+  gap: 2%;
   padding: 0 10px;
   margin-top: 20px;
 }
 
-/* --- Table Container Styling --- */
 .table-container {
-  width: 49%; /* Each table takes up roughly half the screen */
+  width: 49%;
   background-color: white;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
-  box-sizing: border-box; /* Keeps padding inside the width limits */
+  box-sizing: border-box;
 }
 
 .table-container h2 {
@@ -116,7 +123,6 @@ body {
   margin-bottom: 15px;
 }
 
-/* --- The Table Grid (Applies to ALL tables automatically) --- */
 .table-container table {
   width: 100%;
   border-collapse: collapse; 
@@ -124,7 +130,6 @@ body {
   text-align: center; 
 }
 
-/* --- Table Headers --- */
 .table-container th {
   background-color: #f4f4f4; 
   color: #333;
@@ -133,14 +138,12 @@ body {
   border: 1px solid #ddd; 
 }
 
-/* --- Table Rows & Cells --- */
 .table-container td {
   padding: 12px 10px;
   border: 1px solid #ddd;
   color: #444;
 }
 
-/* --- Interactive Row Highlights --- */
 .table-container tbody tr {
   transition: background-color 0.2s ease;
 }
@@ -150,15 +153,12 @@ body {
   cursor: pointer;
 }
 
-/* The row they clicked on */
 .selected-row {
   background-color: #e6b3ff !important; 
   color: black;
   font-weight: bold;
 }
 
-/* --- Cancel Button Styling --- */
-/* I added a comma to target both the room and laptop buttons! */
 #cancelBtn, #cancelLaptopBtn {
   background-color: #512888;
   color: white;
@@ -181,4 +181,15 @@ body {
   background-color: #cccccc; 
   color: #888888;
   cursor: not-allowed;
+}
+
+.editRes{
+  align-items: center; 
+  justify-content: center;
+  margin-right: 50px;
+  margin-left: auto;
+  margin-top: 10px;
+  height: 35px;
+  background-color: #512888; 
+  color: white; 
 }

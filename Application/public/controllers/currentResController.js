@@ -1,4 +1,49 @@
+//selected res for room
 let selectedReservation = null;
+//selected res for laptop
+let selectedReservation2 = null;
+document.getElementById('editRes').addEventListener('click', async function(){
+    try{
+        setTimeout(() => {window.location.href = `/roomPage`;  }, 1000);
+    }
+    catch(e){
+        console.log(e);
+    }
+
+});
+
+document.getElementById('cancelBtn').addEventListener('click', async function(){
+    if (!selectedReservation) return;
+    const isSure = confirm("Are you sure you want to cancel this laptop reservation?");
+    if (!isSure) return;
+    try{
+        console.log("got into try");
+        const response = await fetch('/api/delete-room-reservation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                roomId: selectedReservation.roomId,
+                roomResId: selectedReservation.resId
+            })
+        });
+        console.log("about to wait reponse");
+        const data = await response.json();
+        if (data.success) {
+            alert("Reservation cancelled successfully!");
+            this.disabled = true;
+            selectedReservation = null;
+            loadRooms();
+        } else {
+            alert("failed: " + errorMsg);
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+
+});
+
+
 async function loadRooms() {
     const studentId = sessionStorage.getItem('studentId');
     if (!studentId) {
@@ -32,10 +77,11 @@ function buildRoomTable(reservations) {
         const tr = document.createElement('tr');
         tr.dataset.roomId = res.RoomId;
         tr.dataset.startTime = res.StartTime;
+        tr.dataset.resId = res.RoomReservationId
         tr.innerHTML = `
             <td>${res.StartTime}</td>
             <td>${res.EndTime}</td>
-            <td>${res.RoomId}</td>
+            <td>${res.RoomNumber}</td>
             <td>${res.RoomPassword}</td>
         `;
         tr.addEventListener('click', function() {
@@ -45,7 +91,8 @@ function buildRoomTable(reservations) {
             cancelBtn.disabled = false;
             selectedReservation = {
                 roomId: this.dataset.roomId,
-                startTime: this.dataset.startTime
+                startTime: this.dataset.startTime,
+                resId: this.dataset.resId
             };
             console.log("Ready to cancel:", selectedReservation);
         });
@@ -53,8 +100,6 @@ function buildRoomTable(reservations) {
     });
 }
 
-
-let selectedReservation2 = null;
 async function loadLaptops() {
     const studentId = sessionStorage.getItem('studentId');
     if (!studentId) {
@@ -86,12 +131,13 @@ function buildLaptopTable(reservations) {
     }
     reservations.forEach(res => {
         const tr = document.createElement('tr');
-        tr.dataset.roomId = res.RoomId;
+        tr.dataset.laptopId = res.laptopId;
         tr.dataset.pickupTime = res.PickupTime;
+        tr.dataset.resId = res.LaptopReservationId
         tr.innerHTML = `
             <td>${res.PickupTime}</td>
             <td>${res.DropoffTime}</td>
-            <td>${res.LaptopId}</td>
+            <td> ${res.LaptopId} (${res.LaptopMake})</td>
         `;
         tr.addEventListener('click', function() {
             const allRows = tbody.querySelectorAll('tr');

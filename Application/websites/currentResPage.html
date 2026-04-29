@@ -18,7 +18,11 @@
         <h1 class="engPhotoText">Current Reservations</h1>
         <header class="resOptions">
             <h2 class="resText">My Reservations</h2>
+             <button class="editRes" id="editRes">Reservation Page</button>
         </header>
+        <div class="cancel">
+            <label >To cancel: select your reservation below and click 'Cancel Reservation'</label>
+        </div>
         <div class="tables-wrapper">
             <div class="table-container">
                 <h2>Rooms</h2>
@@ -27,7 +31,7 @@
                         <tr>
                             <th>Start Time</th>
                             <th>End Time</th>
-                            <th>Room ID</th>
+                            <th>Room Name</th>
                             <th>Room Password</th>
                         </tr>
                     </thead>
@@ -41,7 +45,7 @@
                         <tr>
                             <th>Pickup Time</th>
                             <th>Dropoff Time</th>
-                            <th>Laptop ID</th>
+                            <th>Laptop</th>
                         </tr>
                     </thead>
                     <tbody id="laptopBody">

@@ -29,7 +29,7 @@ const checkAuth = (req, res, next) => {
         res.redirect('/home.html'); 
     }
 };
-
+//this section driects users to different pages 
 app.get('/roomPage', checkAuth, (req, res) => {
     res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
@@ -66,6 +66,7 @@ app.get('/adminPage', checkAuth, (req, res) => {
     res.sendFile(path.join(__dirname, 'websites', 'adminPage.html'));
 });
 
+//logins for regular users and admin users
 app.post('/api/login', async (req, res) => {
     const email = req.body.email;
     const pass = req.body.pass;
@@ -118,6 +119,7 @@ app.post('/api/adminLogin', async (req, res) => {
     }
 });
 
+//this section is for commincating back and update the database with new data
 app.post('/api/add-students', async (req, res) => {
     const { firstName, lastName, email, majorId, password } = req.body;
     try {
@@ -269,15 +271,16 @@ app.post('/api/add-laptop', async (req, res) =>
 
 app.post('/api/delete-laptop-reservation', async (req, res) =>
 {
-    const{laptopId} = req.body;
+    const{laptopId, laptopReservationId} = req.body;
     try{
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('id', sql.Int, laptopId);
+        request.input('resId', sql.Int, laptopReservationId);
 
         const result = await request.query(`
             DELETE FROM LaptopReservation
-            WHERE LaptopReservationId = @id
+            WHERE LaptopReservationId = @resId AND LaptopId = @id
             `);
         if (result.rowsAffected[0] === 0) {
             return res.status(404).json({ success: false, message: "Reservation not found." });
@@ -313,15 +316,16 @@ app.post('/api/laptop-reservations', async (req, res) =>{
 
 app.post('/api/delete-room-reservation', async (req, res) =>
 {
-    const{roomId} = req.body;
+    const{roomId, roomResId} = req.body;
     try{
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('id', sql.Int, roomId);
+        request.input('roomResId', sql.Int, roomResId);
 
         const result = await request.query(`
             DELETE FROM RoomReservation
-            WHERE RoomReservationId = @id
+            WHERE RoomReservationId = @roomResId AND RoomId = @id
             `);
         if (result.rowsAffected[0] === 0) {
             return res.status(404).json({ success: false, message: "Reservation not found." });
@@ -337,6 +341,8 @@ app.listen(3000, () => {
     console.log('server running open http://localhost:3000/home.html in browser');
 });
 
+
+//this section is used for room and laptop page, sets up calendar user can pick times from
 app.get('/api/roomCal', async (req, res) => {
     const requestedDate = req.query.date; 
     const dateObj = new Date(requestedDate);
@@ -392,7 +398,7 @@ app.get('/api/laptopCal', async (req, res) => {
             SELECT LaptopId, 
                 FORMAT(PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime, 
                 FORMAT(DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime
-            FROM LaptopReservation 
+            FROM LaptopReservation LR
             WHERE CAST(PickupTime AS DATE) = @searchDate
         `;
         const resResult = await request.query(resQuery);
@@ -408,6 +414,8 @@ app.get('/api/laptopCal', async (req, res) => {
     }
 });
 
+
+//this section is used for currentResPage, gets their current rooms and laptops
 app.get('/api/loadRooms', async (req, res) => {
     const studentId = req.query.studentId
     try {
@@ -416,12 +424,15 @@ app.get('/api/loadRooms', async (req, res) => {
         request.input('studentId', sql.Int, studentId);
         const roomQuery = `
             SELECT 
-                FORMAT(StartTime, 'yyyy-MM-dd HH:mm:ss') AS StartTime,
-                FORMAT(EndTime, 'yyyy-MM-dd HH:mm:ss') AS EndTime,
-                RoomPassword, 
-                RoomId
-            FROM RoomReservation
-            WHERE StudentId = @studentId
+                FORMAT(RR.StartTime, 'yyyy-MM-dd HH:mm:ss') AS StartTime,
+                FORMAT(RR.EndTime, 'yyyy-MM-dd HH:mm:ss') AS EndTime,
+                RR.RoomPassword,
+                RR.RoomId, 
+                R.RoomNumber,
+                RR.RoomReservationId
+            FROM RoomReservation RR
+            INNER JOIN Room R ON RR.RoomId = R.RoomId
+            WHERE RR.StudentId = @studentId AND RR.EndTime >= GETDATE();
         `;
         const roomResult = await request.query(roomQuery);
         let reservations = roomResult.recordset;
@@ -441,11 +452,13 @@ app.get('/api/loadLaptops', async (req, res) => {
         request.input('studentId', sql.Int, studentId);
         const lapQuery = `
             SELECT 
-                FORMAT(PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime,
-                FORMAT(DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime,
-                LaptopId
-            FROM LaptopReservation
-            WHERE StudentId = @studentId 
+                FORMAT(LR.PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime,
+                FORMAT(LR.DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime,
+                LR.LaptopId,
+                L.LaptopMake
+            FROM LaptopReservation LR
+            INNER JOIN Laptop L ON LR.LaptopId = L.LaptopId
+            WHERE LR.StudentId = @studentId AND LR.DropoffTime >= GETDATE();
         `;
         const lapResult = await request.query(lapQuery);
         let reservations = lapResult.recordset;
