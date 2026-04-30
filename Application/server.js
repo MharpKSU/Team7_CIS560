@@ -272,12 +272,12 @@ app.post('/api/add-laptop', async (req, res) =>
 
 app.post('/api/delete-laptop-reservation', async (req, res) =>
 {
-    const{laptopId, laptopReservationId} = req.body;
+    const{laptopId, LaptopReservationId} = req.body;
     try{
         await sql.connect(dbConfig);
         const request = new sql.Request();
         request.input('id', sql.Int, laptopId);
-        request.input('resId', sql.Int, laptopReservationId);
+        request.input('resId', sql.Int, LaptopReservationId);
 
         const result = await request.query(`
             DELETE FROM LaptopReservation
@@ -453,6 +453,7 @@ app.get('/api/loadLaptops', async (req, res) => {
         request.input('studentId', sql.Int, studentId);
         const lapQuery = `
             SELECT 
+                LR.LaptopReservationId,
                 FORMAT(LR.PickupTime, 'yyyy-MM-dd HH:mm:ss') AS PickupTime,
                 FORMAT(LR.DropoffTime, 'yyyy-MM-dd HH:mm:ss') AS DropoffTime,
                 LR.LaptopId,

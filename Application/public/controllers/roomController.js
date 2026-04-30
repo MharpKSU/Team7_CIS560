@@ -100,7 +100,22 @@ async function buildCalendar(selectedDate) {
             for (let i = 0; i < times.length; i++) {
                 let timeStr = times[i];
                 let currentSlotMins = convertHeaderToMins(timeStr);
-                let isClosed = (currentSlotMins < roomOpenMins || currentSlotMins >= roomCloseMins);
+                const now = new Date();
+                const localMonth = String(now.getMonth() + 1).padStart(2, '0');
+                const localDay = String(now.getDate()).padStart(2, '0');
+                const today = `${now.getFullYear()}-${localMonth}-${localDay}`;
+                console.log(today);
+                console.log(selectedDate);
+                let currentTime = (now.getHours() * 60) + now.getMinutes();
+                console.log(currentTime);
+                let isClosed;
+                if(selectedDate == today){
+                    isClosed = (currentSlotMins < roomOpenMins || currentSlotMins >= roomCloseMins || currentSlotMins <= currentTime);
+                }
+                else{
+                    console.log("MEOWOWO");
+                    isClosed = (currentSlotMins < roomOpenMins || currentSlotMins >= roomCloseMins);
+                }
                 let isReserved = false;
                 if (!isClosed && roomObj.bookedSlots) {
                     isReserved = roomObj.bookedSlots.some(slot => {

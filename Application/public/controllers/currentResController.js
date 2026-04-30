@@ -14,7 +14,7 @@ document.getElementById('editRes').addEventListener('click', async function(){
 
 document.getElementById('cancelBtn').addEventListener('click', async function(){
     if (!selectedReservation) return;
-    const isSure = confirm("Are you sure you want to cancel this laptop reservation?");
+    const isSure = confirm("Are you sure you want to cancel this room reservation?");
     if (!isSure) return;
     try{
         console.log("got into try");
@@ -33,6 +33,37 @@ document.getElementById('cancelBtn').addEventListener('click', async function(){
             this.disabled = true;
             selectedReservation = null;
             loadRooms();
+        } else {
+            alert("failed: " + errorMsg);
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+
+});
+
+document.getElementById('cancelLaptopBtn').addEventListener('click', async function(){
+    if (!selectedReservation2) return;
+    const isSure = confirm("Are you sure you want to cancel this laptop reservation?");
+    if (!isSure) return;
+    try{
+        console.log("got into try");
+        const response = await fetch('/api/delete-laptop-reservation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                laptopId: selectedReservation2.laptopId,
+                LaptopReservationId: selectedReservation2.resId
+            })
+        });
+        console.log("about to wait reponse");
+        const data = await response.json();
+        if (data.success) {
+            alert("Reservation cancelled successfully!");
+            this.disabled = true;
+            selectedReservation2 = null;
+            loadLaptops();
         } else {
             alert("failed: " + errorMsg);
         }
@@ -131,7 +162,7 @@ function buildLaptopTable(reservations) {
     }
     reservations.forEach(res => {
         const tr = document.createElement('tr');
-        tr.dataset.laptopId = res.laptopId;
+        tr.dataset.laptopId = res.LaptopId;
         tr.dataset.pickupTime = res.PickupTime;
         tr.dataset.resId = res.LaptopReservationId
         tr.innerHTML = `
@@ -145,8 +176,8 @@ function buildLaptopTable(reservations) {
             this.classList.add('selected-row');
             cancelBtn.disabled = false;
             selectedReservation2 = {
-                LaptopId: this.dataset.LaptopId,
-                PickupTime: this.dataset.PickupTime
+                laptopId: this.dataset.laptopId,
+                resId: this.dataset.resId
             };
             console.log("Ready to cancel:", selectedReservation2);
         });
