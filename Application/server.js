@@ -313,18 +313,17 @@ app.post('/api/delete-laptop-reservation', async (req, res) =>
 });
 
 app.post('/api/laptop-reservations', async (req, res) =>{
-    const{ reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId} = req.body;
+    const{ studentId, dropOffTime, pickUpTime, laptopId} = req.body;
     try{
         await sql.connect(dbConfig);
         const request = new sql.Request();
-        request.input('reservation', sql.NVarChar, reservationDateTime);
         request.input('stid', sql.Int, studentId);
         request.input('drop', sql.VarChar, dropOffTime);
         request.input('pick', sql.VarChar, pickUpTime);
         request.input('lapid', sql.Int, laptopId);
         const query = `
-           INSERT INTO LaptopReservation (ReserveDateTime, StudentId, DropoffTime, PickupTime, LaptopId)
-           VALUES(@reservation, @stid, @drop, @pick, @lapid)
+           INSERT INTO LaptopReservation (StudentId, DropoffTime, PickupTime, LaptopId)
+           VALUES(@stid, @drop, @pick, @lapid)
         `;
         await request.query(query);
         res.json({success: true, message: "Reservation made"});

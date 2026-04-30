@@ -22,7 +22,7 @@ async function runTester() {
       const password = await question('Password: ');
       const isAdmin = await question('Is admin(1 of yes, 0 for no): ')
 
-      const data = { firstName, lastName, email, majorId: parseInt(majorId), password,  isAdmin: parseInt(isAdmin)};
+      const data = { firstName, lastName, email, majorId: parseInt(majorId), password,  isAdmin: parseInt(isAdminInput)};
       await sendRequest('http://localhost:3000/api/add-students', data);
 
     } else if (choice === '2') {
@@ -46,13 +46,12 @@ async function runTester() {
 
     }
     else if(choice === '3'){
-      const reservationDateTime = await question('DateTime: ');
       const studentId = await question('Student Id: ');
       const pickUpTime = await question('Pick Up Time (YYYY-MM-DD HH:MM): ');
       const dropOffTime = await question('Drop Off Time (YYYY-MM-DD HH:MM): ');
       const laptopId = await question('Laptop Id: ');
 
-      const data = {reservationDateTime, studentId, dropOffTime, pickUpTime, laptopId};
+      const data = {studentId, dropOffTime, pickUpTime, laptopId};
       await sendRequest('http://localhost:3000/api/laptop-reservations', data);
     }
     else if(choice === '4'){

@@ -220,7 +220,6 @@ function testfunc(){
     const dropoffTime = formatSQLDatetime(dateInput.value, finalEndTime);
     const studentId = sessionStorage.getItem('studentId');
     return {
-        reservationDateTime: 'wtfisthisfor',
         studentId: parseInt(studentId),
         dropOffTime: dropoffTime,
         pickUpTime: pickupTime,
