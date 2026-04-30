@@ -23,6 +23,7 @@
             <option value="Laptops">Laptops</option>
         </select>
         <button class="editRes" id="editRes">Current Reservations</button>
+        <button class="logOut" onclick="logOut()">Log Out</button>
         </header>
         
         <div class="date-selector">
@@ -52,7 +53,11 @@
 
                 <div id="successStep" style="display: none;">
                     <h3>Reservation Confirmed!</h3>
-                    <p>Your room is booked. You are being logged out...</p>
+                    <h3 id="stayLog">Would you like to stay or log out?</h3>
+                    <div class="buttons">
+                        <button id="stay" onclick="closeModal()" class="cancelButton">Stay</button>
+                        <button id="logBtn" onclick="logOut()" class="confirmButton">Log Out</button>
+                    </div>
                 </div>
             </div>
         </div>

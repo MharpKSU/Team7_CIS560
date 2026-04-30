@@ -184,5 +184,22 @@ function buildLaptopTable(reservations) {
         tbody.appendChild(tr);
     });
 }
+
+async function logOut() {
+    try {
+        const response = await fetch('/api/logout', { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+            alert("Logging out...");
+            sessionStorage.clear(); 
+            setTimeout(() => {
+            window.location.href = "home.html"; 
+            }, 1000);
+        }
+    } catch(e) {
+        console.error("Error logging out:", e);
+    }
+}
 loadRooms();
 loadLaptops();

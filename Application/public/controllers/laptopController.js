@@ -210,6 +210,9 @@ function openModal() {
 //closes confirming pop up
 function closeModal() {
     modal.style.display = 'none';
+    passwordStep.style.display = 'block';
+    successStep.style.display = 'none';
+    buildCalendar(todayString);
 }
 
 function testfunc(){
@@ -242,9 +245,6 @@ async function submitReservation() {
         if (response.ok) {
             passwordStep.style.display = 'none';
             successStep.style.display = 'block';
-            setTimeout(() => {
-                window.location.href = "home.html"; 
-            }, 3000);
         } else {
             const errorMsg = await response.text();
             alert("Reservation failed: " + errorMsg);
@@ -252,5 +252,23 @@ async function submitReservation() {
     } catch (err) {
         console.error('Connection Error:', err);
         alert("Could not connect to the server.");
+    }
+}
+
+async function logOut() {
+    try {
+        const response = await fetch('/api/logout', { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+            alert("Logging out...");
+            document.getElementById('stay').disabled = true;
+            sessionStorage.clear(); 
+            setTimeout(() => {
+            window.location.href = "home.html"; 
+            }, 1000);
+        }
+    } catch(e) {
+        console.error("Error logging out:", e);
     }
 }

@@ -11,7 +11,6 @@ document.getElementById('loginBtn').addEventListener('click', async function(){
         if(data.success){
             loginOutput.style.color = "green";
             loginOutput.innerText = "Logging in...";
-            console.log("SECOND PAGE NOW");
             setTimeout(() => {window.location.href = `/roomPage`;  }, 1000);
             sessionStorage.setItem('userEmail', emailInput);
             sessionStorage.setItem('studentId', parseInt(data.dbMessage));

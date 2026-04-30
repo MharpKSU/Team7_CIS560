@@ -2,7 +2,6 @@
 //tools downloaded:
 //npm install express mssql
 //npm install msnodesqlv8
-//npm install express-session
 const express = require('express');
 const sql = require('mssql/msnodesqlv8');
 const path = require('path');
@@ -23,11 +22,13 @@ const dbConfig ={
 
 const checkAuth = (req, res, next) => {
     const cookieHeader = req.headers.cookie || "";
-    if (cookieHeader.includes("isLoggedIn=true")) {
-        next(); 
-    } else {
-        res.redirect('/home.html'); 
+    if (cookieHeader.includes("email=")) {
+        const emailValue = cookieHeader.split("email=")[1].split(";")[0];
+        if (emailValue.trim() !== "") {
+            return next();
+        }
     }
+    res.redirect('/home.html'); 
 };
 //this section driects users to different pages 
 app.get('/roomPage', checkAuth, (req, res) => {
@@ -58,6 +59,10 @@ app.get('/currentResPage', checkAuth, (req, res) => {
 });
 
 app.get('/adminPage', checkAuth, (req, res) => {
+    const cookieHeader = req.headers.cookie || "";
+    if (!cookieHeader.includes("isAdmin=true")) {
+        return res.redirect('/roomPage');;
+    } 
     res.set({
         'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
         'Pragma': 'no-cache',
@@ -78,7 +83,10 @@ app.post('/api/login', async (req, res) => {
         request.input('pass', sql.NVarChar, pass);
         const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass');
         if (result.recordset.length > 0) {
-            res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
+            res.setHeader('Set-Cookie', [
+            `email=${email}; Path=/; HttpOnly; Max-Age=1800`,
+            `isAdmin=false; Path=/; HttpOnly; Max-Age=1800` 
+            ]);
             return res.json({ success: true, dbMessage: result.recordset[0].StudentId });
         } else {
             return res.json({ success: false, dbMessage:"0" });
@@ -104,7 +112,10 @@ app.post('/api/adminLogin', async (req, res) => {
         request.input('pass', sql.NVarChar, pass);
         const result = await request.query('SELECT StudentId, FirstName FROM Student WHERE Email = @email AND [Password] = @pass AND IsAdmin = 1');
         if (result.recordset.length > 0) {
-            res.setHeader('Set-Cookie', 'isLoggedIn=true; Path=/; HttpOnly');
+            res.setHeader('Set-Cookie', [
+            `email=${email}; Path=/; HttpOnly; Max-Age=1800`,
+            `isAdmin=true; Path=/; HttpOnly; Max-Age=1800` 
+            ]);
             return res.json({ success: true, dbMessage: "success" });
         } else {
             return res.json({ success: false, dbMessage:"0" });
@@ -117,6 +128,14 @@ app.post('/api/adminLogin', async (req, res) => {
         console.error("ERROR:", e);
         res.status(500).json({dbMessage: "SERVER ERROR"})
     }
+});
+
+app.post('/api/logout', (req, res) => {
+    res.setHeader('Set-Cookie', [
+            `email=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly`,
+            `isAdmin=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly` 
+            ]);
+    res.json({ success: true, message: "Logged out successfully" });
 });
 
 //this section is for commincating back and update the database with new data
