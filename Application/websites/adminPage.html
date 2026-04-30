@@ -1,7 +1,7 @@
 ﻿<!--home page of our website, for now a test button is added to test if it connects to our sql database-->
 <!DOCTYPE html>
 <html>
-    <link rel="stylesheet" href="/styles/homestyle.css">
+    <link rel="stylesheet" href="/styles/adminstyle.css">
     <title>KStateReservations</title>
     <header class="header">
         <div class="leftHeader">
@@ -16,41 +16,42 @@
         <div class="container">
             <img class="engPhoto" src="/websitePics/inside-eng-budiling.jpg" height="150px">
             <h1 class="engPhotoText">Admin Page</h1>
-        
+        <button class="logOut" onclick="logOut()">Log Out</button>
+        <div class="inputContainer">
         <div class="studentCreator">
         <h2 class="resText">Add Student</h2>
 
-        <input type="text" id="firstName" placeholder="First Name"><br>
-        <input type="text" id="lastName" placeholder="Last Name"><br>
-        <input type="number" id="majorId" placeholder="Major ID (optional)"><br>
-        <input type="email" id="email" placeholder="Email"><br>
-        <input type="password" id="password" placeholder="Password"><br>
-
+        <input class="input" type="text" id="firstName" placeholder="First Name"><br>
+        <input class="input" type="text" id="lastName" placeholder="Last Name"><br>
+        <input class="input" type="number" id="majorId" placeholder="Major ID (optional)"><br>
+        <input class="input" type="email" id="email" placeholder="Email"><br>
+        <input class="input" type="password" id="password" placeholder="Password"><br>
         <label>
-            <input type="checkbox" id="isAdmin"> Is Admin
+            <input class="isAdmin" type="checkbox" id="isAdmin"> Is Admin
         </label><br><br>
 
-        <button  id="addStudentBtn">Add Student</button>
+        <button  class="studentBtn" id="addStudentBtn">Add Student</button>
 
-        <p id="adminOutput"></p>
+        <p class="adminOutput" id="adminOutput"></p>
     </div>
 
     <div class="laptopCreator">
         <h2 class="resText">Add Laptop</h2>
 
-        <input type="text" id="laptopMake" placeholder="Laptop Make"><br>
-        <input type="text" id="laptopModel" placeholder="Laptop Model"><br>
+        <input class="input" type="text" id="laptopMake" placeholder="Laptop Make"><br>
+        <input class="input" type="text" id="laptopModel" placeholder="Laptop Model"><br>
 
         <label>Date Activated:</label><br>
-        <input type="datetime-local" id="dateActivated"><br>
+        <input class="input" type="datetime-local" id="dateActivated"><br>
 
         <label>Date Deactivated (optional):</label><br>
-        <input type="datetime-local" id="dateDeactivated"><br><br>
+        <input class="input" type="datetime-local" id="dateDeactivated"><br><br>
 
-        <button id="addLaptopBtn">Add Laptop</button>
+        <button class="laptopBtn" id="addLaptopBtn">Add Laptop</button>
 
-        <p id="laptopOutput"></p>
+        <p class="laptopOutput" id="laptopOutput"></p>
     </div>
+
 
         </div>
     

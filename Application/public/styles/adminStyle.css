@@ -13,13 +13,11 @@ body {
 
 .container{
   background-color: white;
-  /*this adjusts the size of the body panel, adjusts how much of the stripes you can see for the background bascailly*/
   max-width: 96%; 
   min-height: 150vh; 
   margin: 0 auto; 
   margin-top: 0;
-  
-  /*adds a shadow between the stripes and body of website*/
+
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
@@ -68,16 +66,86 @@ body {
   background-color: #512888; 
   color: white; 
 }
-
-/*this portion styles the main body under the title and eng building photo*/
-.resText{
-  font-size: 30px;
-  font-weight: bold;
-  color: #512888;
-  padding-left: 10px;
-  padding-top: 10px;
-  margin: 0px;
-  margin-top: 0;
+/* --- Buttons --- */
+.logOut {
+  float: right; /* Classic, simple way to push the button right */
+  margin-right: 30px;
+  margin-top: 15px;
+  background-color: #512888;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  font-size: 14px;
+  border-radius: 3px;
+  cursor: pointer;
 }
 
+.logOut:hover {
+  background-color: #3b1d63;
+}
 
+/* --- Form Layout --- */
+.inputContainer {
+  display: flex;
+  justify-content: center;
+  gap: 30px; 
+  padding: 20px;
+  clear: both; /* Makes sure the floating log out button doesn't mess up the layout */
+}
+
+/* Basic, clean boxes for the forms */
+.studentCreator, .laptopCreator {
+  background-color: white;
+  border: 2px solid #512888; /* Simple solid border instead of fancy shadows */
+  border-radius: 5px;
+  padding: 20px;
+  width: 40%; /* Simple percentage width */
+}
+
+.resText {
+  font-size: 24px;
+  color: #512888;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #512888;
+  padding-bottom: 5px;
+}
+
+.input {
+  width: 95%;
+  padding: 8px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+.studentCreator label, .laptopCreator label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.isAdmin {
+  margin-right: 5px;
+}
+
+.studentBtn, .laptopBtn {
+  width: 100%;
+  background-color: #512888;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.tudentBtn:hover, .laptopBtn:hover {
+  background-color: #3b1d63;
+}
+
+.adminOutput, .laptopOutput {
+  text-align: center;
+  font-weight: bold;
+}
