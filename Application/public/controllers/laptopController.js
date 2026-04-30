@@ -86,7 +86,19 @@ async function buildCalendar(selectedDate) {
             for (let i = 0; i < times.length; i++) {
                 let timeStr = times[i];
                 let currentSlotMins = convertHeaderToMins(timeStr);
-
+                const now = new Date();
+                const localMonth = String(now.getMonth() + 1).padStart(2, '0');
+                const localDay = String(now.getDate()).padStart(2, '0');
+                const today = `${now.getFullYear()}-${localMonth}-${localDay}`;
+                let currentTime = (now.getHours() * 60) + now.getMinutes();
+                let isClosed;
+                if(selectedDate == today){
+                    isClosed = (currentSlotMins <= currentTime);
+                }
+                else{
+                    console.log("MEOWOWO");
+                    isClosed = false;
+                }
                 let isReserved = false;
                 if (laptopObj.bookedSlots) {
                     isReserved = laptopObj.bookedSlots.some(slot => {
@@ -97,7 +109,7 @@ async function buildCalendar(selectedDate) {
                         return currentSlotMins >= startMins && currentSlotMins < endMins;
                     });
                 }
-                if (isReserved) {
+                if (isClosed || isReserved) {
                     html += `<td class="unavailable" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
                 } else {
                     html += `<td id="${laptopObj.LaptopId}" class="available time-block" data-laptop="${laptopObj.LaptopId}" data-time="${timeStr}" data-index="${i}"></td>`;
@@ -228,10 +240,38 @@ function testfunc(){
 }
 //for submitting the reservations
 async function submitReservation() {
-    passwordStep.style.display = 'none';
-    successStep.style.display = 'block';
     const data = testfunc();
     console.log(data);
+    try{
+        console.log("in tryy");
+        const response = await fetch(`/api/loadLaptops?studentId=${sessionStorage.getItem('studentId')}`);
+        const reser = await response.json();
+        if (reser.success) {
+            console.log("in if");
+            for(let res of reser.reservations){
+                console.log("in for");
+                if(res.PickupTime.split(' ')[0] == dateInput.value){
+                    console.log("in MAIN");
+                    console.log(data.pickUpTime);
+                    console.log(data.dropOffTime);
+                    const existingStart = res.PickupTime;
+                    const existingEnd = res.DropoffTime;
+                    console.log(existingStart);
+                    console.log(existingEnd);
+                    if(data.pickUpTime < existingEnd && data.dropOffTime > existingStart){
+                        alert("you cannot checkout mutiple laptops at the same times");
+                        closeModal();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
+    passwordStep.style.display = 'none';
+    successStep.style.display = 'block';
 
     try {
         console.log('Sending reservation to database...', data);

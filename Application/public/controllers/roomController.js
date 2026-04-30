@@ -104,10 +104,7 @@ async function buildCalendar(selectedDate) {
                 const localMonth = String(now.getMonth() + 1).padStart(2, '0');
                 const localDay = String(now.getDate()).padStart(2, '0');
                 const today = `${now.getFullYear()}-${localMonth}-${localDay}`;
-                console.log(today);
-                console.log(selectedDate);
                 let currentTime = (now.getHours() * 60) + now.getMinutes();
-                console.log(currentTime);
                 let isClosed;
                 if(selectedDate == today){
                     isClosed = (currentSlotMins < roomOpenMins || currentSlotMins >= roomCloseMins || currentSlotMins <= currentTime);
@@ -254,13 +251,17 @@ function testfunc(){
     const startTime = formatSQLDatetime(dateInput.value, finalStartTime);
     const endTime = formatSQLDatetime(dateInput.value, finalEndTime);
     const studentId = sessionStorage.getItem('studentId');
+    const [sHour, sMin] = finalStartTime.split(':').map(str => parseInt(str));
+    const [eHour, eMin] = finalEndTime.split(':').map(str => parseInt(str));
+    const totalHours = (eHour - sHour) + (eMin - sMin) / 60;
+    console.log(totalHours);
     return {
         startTime: startTime,
         endTime: endTime,
         roomPassword: document.getElementById('roomPassword').value,
         roomId: parseInt(roomId),
         studentId: parseInt(studentId),
-        reservationDuration: "1 hour" 
+        reservationDuration: `${totalHours} hour(s)` 
     };
 }
 //for submitting the reservations
@@ -270,9 +271,29 @@ async function submitReservation() {
         alert("Please enter a password.");
         return;
     }
+    const data = testfunc();
+    try{
+        const response = await fetch(`/api/loadRooms?studentId=${sessionStorage.getItem('studentId')}`);
+        const reser = await response.json();
+        if (reser.success) {
+            for(let res of reser.reservations){
+                if(res.StartTime.split(' ')[0] == dateInput.value){
+                    const existingStart = res.StartTime;
+                    const existingEnd = res.EndTime;
+                    if(data.startTime < existingEnd && data.endTime > existingStart){
+                        alert("you cannot checkout mutiple rooms at the same times");
+                        closeModal();
+                        return;
+                    }
+                }
+            }
+        }
+    }
+    catch(e){
+        console.log(e);
+    }
     passwordStep.style.display = 'none';
     successStep.style.display = 'block';
-    const data = testfunc();
     console.log(data);
 
     try {

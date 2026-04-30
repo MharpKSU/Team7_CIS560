@@ -99,7 +99,14 @@ body {
   padding-bottom: 10px;
 }
 
+.loginBtn button{
+  background-color: #512888;
+  color: white;
+}
+
 /* FOR ADMIN BUTTON*/
 .adminLoginBtn {
+  background-color: #512888;
+  color: white;
     margin-left: 10px;
 }
