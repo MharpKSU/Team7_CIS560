@@ -290,6 +290,7 @@ async function submitReservation() {
         }
     }
     catch(e){
+        alert("test");
         console.log(e);
     }
     passwordStep.style.display = 'none';
@@ -309,7 +310,7 @@ async function submitReservation() {
             successStep.style.display = 'block';
         } else {
             const errorMsg = await response.text();
-            alert("Reservation failed: " + errorMsg);
+            alert("Reservation failed - cannot be made at this time, sorry! ");
         }
     } catch (err) {
         console.error('Connection Error:', err);

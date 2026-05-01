@@ -1,3 +1,12 @@
+IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'KSUReservations')
+BEGIN
+    CREATE DATABASE KSUReservations;
+END
+GO
+
+USE KSUReservations;
+GO
+
 DROP TABLE IF EXISTS RoomReservation; 
 DROP TABLE IF EXISTS LaptopReservation;
 DROP TABLE IF EXISTS RoomReservation;

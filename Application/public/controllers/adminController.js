@@ -166,3 +166,46 @@ async function logOut() {
         console.error("Error logging out:", e);
     }
 }
+
+function tableSetup(table, containerId) {
+    const container = document.getElementById(containerId);
+    if (!table || table.length === 0) {
+        container.innerHTML = 'No data available';
+        return;
+    }
+    let tableHTML = `<table class="table admin-table" border="1">`;
+    const columnNames = Object.keys(table[0]);
+    tableHTML += `<thead><tr>`;
+    columnNames.forEach(colName => {
+        tableHTML += `<th>${colName}</th>`;
+    });
+    tableHTML += `</tr></thead>`;
+    tableHTML += `<tbody>`;
+    table.forEach(row => {
+        tableHTML += `<tr>`;
+        columnNames.forEach(colName => {
+            tableHTML += `<td>${row[colName] !== null ? row[colName] : 'N/A'}</td>`; 
+        });
+        tableHTML += `</tr>`;
+    });
+    tableHTML += `</tbody></table>`;
+    container.innerHTML = tableHTML;
+}
+
+document.addEventListener('DOMContentLoaded', async() => {
+    try {
+        const response = await fetch('/api/stats');
+        const data = await response.json();
+        tableSetup(data.rooms, 'roomContainer');
+        tableSetup(data.times, 'timeContainer');
+        tableSetup(data.laptops, 'laptopContainer');
+        tableSetup(data.students, 'studentContainer');
+
+    } catch (error) {
+        console.error("Error loading dashboard:", error);
+        document.getElementById('roomContainer').innerHTML = 'Error loading data';
+        document.getElementById('timeContainer').innerHTML = 'Error loading data';
+        document.getElementById('laptopContainer').innerHTML = 'Error loading data';
+        document.getElementById('studentContainer').innerHTML = 'Error loading data';
+    }
+});

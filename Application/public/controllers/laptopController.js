@@ -243,11 +243,9 @@ async function submitReservation() {
     const data = testfunc();
     console.log(data);
     try{
-        console.log("in tryy");
         const response = await fetch(`/api/loadLaptops?studentId=${sessionStorage.getItem('studentId')}`);
         const reser = await response.json();
         if (reser.success) {
-            console.log("in if");
             for(let res of reser.reservations){
                 console.log("in for");
                 if(res.PickupTime.split(' ')[0] == dateInput.value){

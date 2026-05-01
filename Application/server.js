@@ -11,7 +11,7 @@ app.use(express.json());
 
 const dbConfig ={
     server: '(localdb)\\MSSQLLocalDb',
-    database: 'master',
+    database: 'KSUReservations',
     driver: 'ODBC Driver 17 for SQL Server',
     options: {
         trustedConnection: true,
@@ -517,5 +517,23 @@ app.get('/api/loadLaptops', async (req, res) => {
     } catch(e) {
         console.error("ERROR:", e);
         res.status(500).json({ success: false, dbMessage: "SERVER ERROR" });
+    }
+});
+
+app.get('/api/stats', async (req, res) => {
+    try {
+        await sql.connect(dbConfig);
+        const request = new sql.Request();
+        const result = await request.execute('GetDataStats');
+        res.json({
+            rooms: result.recordsets[0], 
+            times: result.recordsets[1],      
+            laptops: result.recordsets[2],
+            students: result.recordsets[3]
+        });
+        
+    } catch (error) {
+        console.error("Database error:", error);
+        res.status(500).send("Error fetching dashboard data");
     }
 });

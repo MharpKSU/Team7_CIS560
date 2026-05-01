@@ -1,3 +1,5 @@
+/*some use of Gemini was used for average CSS formatting, like padding, colors, and over general details*/
+
 body {
   /* stripes for background! */
   background: repeating-linear-gradient(
@@ -148,4 +150,28 @@ body {
 .adminOutput, .laptopOutput {
   text-align: center;
   font-weight: bold;
+}
+
+.resStats{
+  font-size: 30px;
+  font-weight: bold;
+  color: #512888;
+  padding-left: 10px;
+  padding-top: 10px;
+  margin: 0px;
+  margin-top: 0;
+}
+
+.stats{
+  font-size: 20px;
+  font-weight: bold;
+  color: #512888;
+  padding-left: 10px;
+  padding-top: 10px;
+  margin: 0px;
+  margin-top: 0;
+}
+
+.table{
+  margin-left: 10px;
 }
