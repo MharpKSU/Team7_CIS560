@@ -1,7 +1,7 @@
 Team 7(Maddie, Lauren, Isaac): Eng Study Room and Laptop Checkout website 
 - web-based database application
 
-must have following installed to run:
+Libraries used - must have following installed to run:
 1. Microsoft SQL Server
 2. Node.js(v18 or higher) - https://nodejs.org/en
 3. npm install express mssql
@@ -60,3 +60,6 @@ SQL
 
 Tables.sql:
 main database we pull all data from
+
+AggregatingQueries.sql:
+this gets stats about the rooms, laptops, students and times. Holds all aggregating queries for this project. 
