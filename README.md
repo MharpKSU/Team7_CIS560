@@ -60,3 +60,6 @@ SQL
 
 Tables.sql:
 main database we pull all data from
+
+AggregatingQueries.sql:
+this gets stats about the rooms, laptops, students and times. Holds all aggregating queries for this project. 
