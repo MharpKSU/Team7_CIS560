@@ -18,7 +18,9 @@ Technical Details:
 - Database: SQL server
 
 Project Details:
+
 Frontend
+
 every html page has a corrensponding .js controller and .css file for styling
 
 home.html:
