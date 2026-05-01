@@ -18,5 +18,43 @@ Technical Details:
 - Database: SQL server
 
 Project Details:
-- Frontend -
+Frontend
+every html page has a corrensponding .js controller and .css file for styling
 
+home.html:
+This is where the user logs in, it asks for an email and password. There are two logging in options/buttons: Log in, and Admin log in
+
+roomPage.htmk:
+this is where student can checkout study rooms, on the table that has the open times & rooms, you click the time you want, and when you want it to end
+you then can go to the bottom of the page and hit confirm, which will prompt for a room pin, and then you can submit or cancel the reservation
+
+above the table you can find a button to log out, a button to look at current/upcoming reservations, and a drop down menu to switch between the room and laptop checkout page
+
+laptopPage.html:
+this is where student can checkout laptops, on the table that has the open times & rooms, you click the time you want, and when you want it to end
+you then can go to the bottom of the page and hit confirm, which will show the selected time and ask if they want to submit, and then you can submit or cancel the reservation
+
+above the table you can find a button to log out, a button to look at current/upcoming reservations, and a drop down menu to switch between the room and laptop checkout page
+
+currentResPage:
+this is where a student can see their current/upcoming reservations, it shows the date and times booked, what room, and the room pin
+same for the laptops as well
+you can click and highlight any reservation you would like to cancel, and hit the cancel reservation button to proceed.
+
+adminPage.html:
+this is where an admin can add in a student, laptop, or deactivate a laptop in the database
+scrolling down the admin can also access the aggregating queries stats for the rooms, laptops, most used times, and students
+
+Backend
+
+server.js:
+The core Node.js and Express backend for the application
+It establishes the connection pool to the SQL Server database and defines all the API endpoints the frontend uses to retrieve or submit checkout data
+
+backend.js
+this file is for testing and adding data into the database using the terminal only
+
+SQL
+
+Tables.sql:
+main database we pull all data from
