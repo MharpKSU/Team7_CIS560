@@ -12,6 +12,11 @@ RUNNING THE APPLICATION:
 2. to start server, type in terminal: node Application/server.js
 3. open http://localhost:3000/home.html in web browser
 
-potential errors:
-1. when running, if error: Data source name not found 
-- must change driver in server.js, search and open ODBC Data sources on device, go to driver tab, and change line in server.js to '.... for SQL Server' found on device
+Technical Details:
+- Website/UI: HTML, CSS, Javascript
+- Backend: Node.js
+- Database: SQL server
+
+Project Details:
+- Frontend -
+
