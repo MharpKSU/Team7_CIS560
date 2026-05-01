@@ -4,10 +4,6 @@
 USE KSUReservations;
 GO
 
-CREATE OR ALTER PROCEDURE GetDataStats
-AS
-BEGIN
-
 DECLARE @StartDate DATETIME = '2022-01-01';
 DECLARE @EndDate DATETIME = '2026-4-1';
 
@@ -137,8 +133,3 @@ FROM Student s
     LEFT JOIN LaptopTotals l ON s.StudentId = l.StudentId
 WHERE ISNULL(r.RoomMinutes, 0) + ISNULL(l.LaptopMinutes, 0) >= @MinReservationTime
 ORDER BY StudentRank;
-
-END
-GO
-
-EXEC GetDataStats;
