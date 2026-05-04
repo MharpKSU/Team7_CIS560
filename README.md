@@ -12,6 +12,7 @@ RUNNING THE APPLICATION:
 2. to start server, type in terminal: node Application/server.js
 3. open http://localhost:3000/home.html in web browser
 
+
 Technical Details:
 - Website/UI: HTML, CSS, Javascript
 - Backend: Node.js
@@ -20,7 +21,6 @@ Technical Details:
 Project Details:
 
 Frontend
-
 every html page has a corrensponding .js controller and .css file for styling
 
 home.html:
@@ -29,13 +29,11 @@ This is where the user logs in, it asks for an email and password. There are two
 roomPage.htmk:
 this is where student can checkout study rooms, on the table that has the open times & rooms, you click the time you want, and when you want it to end
 you then can go to the bottom of the page and hit confirm, which will prompt for a room pin, and then you can submit or cancel the reservation
-
 above the table you can find a button to log out, a button to look at current/upcoming reservations, and a drop down menu to switch between the room and laptop checkout page
 
 laptopPage.html:
 this is where student can checkout laptops, on the table that has the open times & rooms, you click the time you want, and when you want it to end
 you then can go to the bottom of the page and hit confirm, which will show the selected time and ask if they want to submit, and then you can submit or cancel the reservation
-
 above the table you can find a button to log out, a button to look at current/upcoming reservations, and a drop down menu to switch between the room and laptop checkout page
 
 currentResPage:
@@ -59,7 +57,14 @@ this file is for testing and adding data into the database using the terminal on
 SQL
 
 Tables.sql:
-main database we pull all data from
+This file is the the foundational schema for the KSUReservations database. 
+defines the main tables of our project: Students, Laptops, Rooms, etc.
+where we pull and store all of our data.
 
 AggregatingQueries.sql:
-this gets stats about the rooms, laptops, students and times. Holds all aggregating queries for this project. 
+This file is the raw SQL source code for the four aggregating queries: Room Popularity, Peak Checkout Times, Laptop Maintenance, and Frequent User tracking. 
+
+Procedures.sql:
+This file contains GetDataStats stored procedure which is designed to act as a single "Dashboard Engine" for the Admin portal.
+By putting our four aggregating queries into one procedure, the application minimizes network overhead getting all of our datasets in a single database call
+making sure the dashboard loads efficiently and also keeps our SQL logic centralized and easy to maintain!
